@@ -98,33 +98,15 @@
 <p>完整錯誤訊息如果是經由 Android Studio <code>CatLog</code> 查看，大概會是這樣：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NullInjectorError: R3InjectorError(Platform: core)[t -&gt; Ir]</span><br><span class="line">NullInjectorError: No provider for Ir!</span><br></pre></td></tr></table></figure>
 <p><img src="https://github.com/AnnChouCode/AnnChouCode.github.io/blob/main/2025/01/04/ionicAngular-errorPt/optimizationError.jpg?raw=true" alt="Android Studio CatLog 截圖"></p>
-<p>不過在網路上查過後發現</p>
-<ul>
-<li><code>R3InjectorError(Platform: core)[t -&gt; lr]</code> 中的 <code>lr</code> 在每個人的訊息都不一樣，有些人可能是 <code>Xr</code>、<code>Os</code> 等。 ​</li>
-<li>問題不一定在開發環境或生產環境發生。</li>
-<li>Ionic 8 + Angular 19 也可能發生相同問題（<a target="_blank" rel="noopener" href="https://forum.ionicframework.com/t/issue-on-ionic-v8-capacitorjs-angular-19/245759">link</a>）。</li>
-</ul>
-<h2 id="▍-解法"><a href="#▍-解法" class="headerlink" title="▍ 解法"></a>▍ 解法</h2><h3 id="【解法一】Angular-降版至-18：成功"><a href="#【解法一】Angular-降版至-18：成功" class="headerlink" title="【解法一】Angular 降版至 18：成功"></a>【解法一】Angular 降版至 18：成功</h3><p>在 Ionic 論壇的討論結果是「降版 Angular 至 18」XD 雖然還有其他解法，但這似乎是討論者們支持最穩定的方法。可能 Angular 19 還太新了，Ionic 7 是 2023 年推出的，沒有完整支持。</p>
-<p>在將 <code>package.json</code> 中的 Angular 19 改成 18.2.12 版本後，再安裝相對應的 TS 和 zone 就可以了。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install typescript@5.5.4 --legacy-peer-deps</span><br><span class="line">npm install zone.js@0.14.10 --legacy-peer-deps</span><br></pre></td></tr></table></figure>
-<p>不論是 Android Studio 測試，或做成 PWA 發佈到 firebase 網頁上查看都沒有問題。</p>
-<p>解法來源：<a target="_blank" rel="noopener" href="https://forum.ionicframework.com/search?q=R3InjectorError(Platform:%20core)">https://forum.ionicframework.com/search?q=R3InjectorError(Platform%3A%20core)</a></p>
-<h3 id="【解法二】註解-Angular-優化功能：失敗"><a href="#【解法二】註解-Angular-優化功能：失敗" class="headerlink" title="【解法二】註解 Angular 優化功能：失敗"></a>【解法二】註解 Angular 優化功能：失敗</h3><p>開啟 angular.json 檔案，將以下屬性設為 false。但我查看了自己的設定，預設已經是 false，這對我來說沒有用。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;development&quot;: &#123;</span><br><span class="line">  &quot;optimization&quot;: false, // 編譯過程中的優化功能</span><br><span class="line">  &quot;buildOptimizer&quot;: false // Angular 特定的構建優化器</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-<p>解法來源：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/78461745">https://stackoverflow.com/a/78461745</a></li>
-<li><a target="_blank" rel="noopener" href="https://forum.ionicframework.com/t/how-to-trace-nullinjectorerror-which-appears-in-production-environment-only/245480/11">https://forum.ionicframework.com/t/how-to-trace-nullinjectorerror-which-appears-in-production-environment-only/245480/11</a></li>
-</ul>
-<h3 id="【解法三】註解-Angular-優化功能：失敗"><a href="#【解法三】註解-Angular-優化功能：失敗" class="headerlink" title="【解法三】註解 Angular 優化功能：失敗"></a>【解法三】註解 Angular 優化功能：失敗</h3><p>註解common.js中關於 JavaScript 文件的壓縮優化的程式碼。雖然這在 Android Studio APP CatLog 中沒有再報錯，但佈署到 firebase 時還是錯誤 QQ。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// node_modules\@angular-devkit\build-angular\src\tools\webpack\configs\common.js</span><br><span class="line">if (scriptsOptimization) &#123;</span><br><span class="line">    extraMinimizers.push(new plugins_1.JavaScriptOptimizerPlugin(&#123;</span><br><span class="line">        ...</span><br><span class="line">        advanced: buildOptions.buildOptimizer,</span><br><span class="line">    &#125;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>解法來源：<a target="_blank" rel="noopener" href="https://stackoverflow.com/a/78676522">https://stackoverflow.com/a/78676522</a></p>
-<p>— 文章同步發佈於 <a target="_blank" rel="noopener" href="https://vocus.cc/article/677897ddfd897800014586ba">Vocus</a></p>
-
+        
+          <p class="article-more-link">
+            <a href="2025/01/04/ionicAngular-errorPt/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://annchoucode.github.io/AnnChouCode.github.io/2025/01/04/ionicAngular-errorPt/" data-id="cm5i5790r0001f46k65j3fa7x" data-title="Ionic 7+Angular：除錯 R3InjectorError(Platform:core)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://annchoucode.github.io/AnnChouCode.github.io/2025/01/04/ionicAngular-errorPt/" data-id="cm5i5ihep00011k6kaq586bf5" data-title="Ionic 7+Angular：除錯 R3InjectorError(Platform:core)" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -177,7 +159,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://annchoucode.github.io/AnnChouCode.github.io/2025/01/04/hello-world/" data-id="cm5i5790j0000f46k1o3d7ly7" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://annchoucode.github.io/AnnChouCode.github.io/2025/01/04/hello-world/" data-id="cm5i5ihej00001k6kfrfug175" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
