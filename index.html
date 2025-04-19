@@ -181,7 +181,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2025-04-19 11:11:54 / 修改時間：12:46:32" itemprop="dateCreated datePublished" datetime="2025-04-19T11:11:54+08:00">2025-04-19</time>
+              <time title="創建時間：2025-04-19 11:11:54 / 修改時間：15:13:09" itemprop="dateCreated datePublished" datetime="2025-04-19T11:11:54+08:00">2025-04-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -217,34 +217,14 @@
 <li>開啟 VS code 終端機輸入安裝指令</li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-expo-app@latest</span><br></pre></td></tr></table></figure>
-<p>接著會有一連串問題，</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- Ok to proceed? (y)  y</span><br><span class="line">- Creating an Expo project using the default template. //預設使用default模板</span><br><span class="line"></span><br><span class="line">//提示如果要使用模板指令 -- template 打上名稱</span><br><span class="line">To choose from all available templates pass in the --template arg:</span><br><span class="line">  $ npx create-expo-app --template</span><br><span class="line"></span><br><span class="line">To choose from all available examples pass in the --example arg:</span><br><span class="line">  $ npx create-expo-app --example</span><br></pre></td></tr></table></figure>
-
-<h2 id="▍-啟動專案"><a href="#▍-啟動專案" class="headerlink" title="▍ 啟動專案"></a>▍ 啟動專案</h2><ol>
-<li><p>確保手機和電腦在相同網路環境。</p>
-</li>
-<li><p>VS code 終端機</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx expo start</span><br></pre></td></tr></table></figure>
-<p>終端機將出現 QRcode 和 Web localhost 網址，localhost 網址可直接點擊預覽，但有些功能只支持在手機上看。<br><img src="https://hackmd.io/_uploads/ryAya5eyxg.png" alt="ExpoStart"></p>
-<ol start="3">
-<li><p>手機安裝 Expo Go App（<a target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=host.exp.exponent&referrer=docs">Android</a> &#x2F; <a target="_blank" rel="noopener" href="https://apps.apple.com/us/app/expo-go/id982107779">iOS</a>）</p>
-</li>
-<li><p>安裝後使用手機掃描終端機上的 App，就能開啟預覽。只要程式碼改變，App 上的畫面也會跟著變化。<br><img src="https://hackmd.io/_uploads/Bydjs9eklx.png" alt="ExpoGo"></p>
-</li>
-</ol>
-<h2 id="▍-Build-專案"><a href="#▍-Build-專案" class="headerlink" title="▍ Build 專案"></a>▍ Build 專案</h2><p>開發者可以使用 EAS 做線上 build 和發布到 App 平台，是個很方便的工具。<br>使用 EAS 並不是必要的，這關乎到你開發項目中是否有 EAS 無法編譯的功能，例如推播功能若串接 Firebase，就無法用 EAS 編譯。</p>
-<ol>
-<li>先進入 <a target="_blank" rel="noopener" href="https://expo.dev/eas">EAS</a> 註冊帳號</li>
-<li>回到 VS code 終端機</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eas login // 登入</span><br><span class="line">eas build:configure  // 編譯至expo eas 雲端</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>檢查 EAS 網站上的編譯進度</li>
-</ol>
-<h2 id="▍-React-Native-Expo-Workflow"><a href="#▍-React-Native-Expo-Workflow" class="headerlink" title="▍ React Native &#x2F; Expo Workflow"></a>▍ React Native &#x2F; Expo Workflow</h2><p>在 Build 專案的區塊提到「推播功能若串接 Firebase，就無法用 EAS 編譯」，就必須來介紹 Expo 的 Workflow。<br>原本的 Expo 是沒有 android 或 ios 資料夾的，但 Firebase 需要經過額外設定流程，所以必須透過 <code>npx expo prebuild</code> 將 workflow 切換至 Bare Workflow，此時便會依照你目前開發電腦的系統在專案中產生 android 或 ios 資料夾。而未來要測試這個推播功能，也無法使用 Expo 原生提供的辦法測試，之後再寫一篇新文介紹推播。<br><img src="https://hackmd.io/_uploads/HJjetsgJxe.png" alt="ExpoWorkflow"></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Development-notes/APP/20250419/93694046/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -288,7 +268,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2025-04-19 11:11:01 / 修改時間：11:11:30" itemprop="dateCreated datePublished" datetime="2025-04-19T11:11:01+08:00">2025-04-19</time>
+              <time title="創建時間：2025-04-19 11:11:01 / 修改時間：13:01:01" itemprop="dateCreated datePublished" datetime="2025-04-19T11:11:01+08:00">2025-04-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -433,10 +413,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              
 
-              <time title="創建時間：2025-01-28 11:29:15 / 修改時間：15:32:31" itemprop="dateCreated datePublished" datetime="2025-01-28T11:29:15+08:00">2025-01-28</time>
+              <time title="創建時間：2025-01-28 11:29:15" itemprop="dateCreated datePublished" datetime="2025-01-28T11:29:15+08:00">2025-01-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2025-04-19 13:01:01" itemprop="dateModified" datetime="2025-04-19T13:01:01+08:00">2025-04-19</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -523,7 +509,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2025-01-19 10:31:35" itemprop="dateModified" datetime="2025-01-19T10:31:35+08:00">2025-01-19</time>
+                <time title="修改時間：2025-04-19 13:01:01" itemprop="dateModified" datetime="2025-04-19T13:01:01+08:00">2025-04-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -601,10 +587,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              
 
-              <time title="創建時間：2025-01-18 13:24:42 / 修改時間：14:51:13" itemprop="dateCreated datePublished" datetime="2025-01-18T13:24:42+08:00">2025-01-18</time>
+              <time title="創建時間：2025-01-18 13:24:42" itemprop="dateCreated datePublished" datetime="2025-01-18T13:24:42+08:00">2025-01-18</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2025-04-19 13:01:01" itemprop="dateModified" datetime="2025-04-19T13:01:01+08:00">2025-04-19</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -694,7 +686,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2025-01-18 14:51:06" itemprop="dateModified" datetime="2025-01-18T14:51:06+08:00">2025-01-18</time>
+                <time title="修改時間：2025-04-19 13:01:01" itemprop="dateModified" datetime="2025-04-19T13:01:01+08:00">2025-04-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
