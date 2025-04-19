@@ -116,7 +116,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">9</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">11</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -126,7 +126,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">6</span></a>
 
   </li>
   </ul>
@@ -220,6 +220,237 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250128/2826999050/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ann Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ann Chou Coding">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Development-notes/APP/20250128/2826999050/" class="post-title-link" itemprop="url">App 種類概述</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2025-01-28 11:29:15" itemprop="dateCreated datePublished" datetime="2025-01-28T11:29:15+08:00">2025-01-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2025-04-19 10:49:51" itemprop="dateModified" datetime="2025-04-19T10:49:51+08:00">2025-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/" itemprop="url" rel="index"><span itemprop="name">開發筆記</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/APP/" itemprop="url" rel="index"><span itemprop="name">APP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>此篇作為 <a href="https://annchoucode.github.io/tags/APP/">此部落格 App 技術文</a> 的前導介紹，概述 App 種類差異。</p>
+<h2 id="▍-App-種類比較"><a href="#▍-App-種類比較" class="headerlink" title="▍ App 種類比較"></a>▍ App 種類比較</h2><p>製作 App 的軟體有很多種，例如 Ionic、React Native、Flutter…。<br>不過我們在決定要使用哪一套工具前，可以先了解 App 要使用多少手機原生功能、人力技術、效能等資訊。</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>Native</th>
+<th>Cross-platform</th>
+<th>Hybrid</th>
+<th>Web App &#x2F; PWA</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>使用技術</td>
+<td>原生語言</td>
+<td>JS&#x2F;Dart + 框架</td>
+<td>Web 技術 + WebView</td>
+<td>純 Web 技術</td>
+</tr>
+<tr>
+<td>使用框架／平台</td>
+<td>Xcode、Android Studio</td>
+<td>React Native、Flutter、Xamarin</td>
+<td>Ionic、Cordova、Capacitor</td>
+<td>Vue.js、React.js、Angular + PWA 支援</td>
+</tr>
+<tr>
+<td>原生功能支援</td>
+<td>完整</td>
+<td>高</td>
+<td>有限</td>
+<td>有限</td>
+</tr>
+<tr>
+<td>安裝方式</td>
+<td>App Store &#x2F; Google Play</td>
+<td>App Store &#x2F; Google Play</td>
+<td>App Store &#x2F; Google Play</td>
+<td>免安裝，直接開啟</td>
+</tr>
+<tr>
+<td>效能</td>
+<td>⭐⭐⭐⭐</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐</td>
+<td>⭐</td>
+</tr>
+<tr>
+<td>推播通知支援</td>
+<td>✅</td>
+<td>✅</td>
+<td>需設定 plugin</td>
+<td>限支援 PWA 瀏覽器</td>
+</tr>
+<tr>
+<td>離線功能</td>
+<td>✅</td>
+<td>✅</td>
+<td>視 plugin 支援</td>
+<td>僅部分瀏覽器支援</td>
+</tr>
+<tr>
+<td>學習曲線</td>
+<td>高</td>
+<td>中</td>
+<td>相對低</td>
+<td>低</td>
+</tr>
+</tbody></table>
+<h2 id="▍-相關文章"><a href="#▍-相關文章" class="headerlink" title="▍ 相關文章"></a>▍ 相關文章</h2><p>因為我是 Web 開發者，最近才開始接觸 App 開發，知識認知上還是有限度。<br>附上更深入比較的文章提供參考。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@ianchen0419/app%E9%96%8B%E7%99%BC%E7%9A%844%E7%A8%AE%E4%B8%BB%E6%B5%81%E6%96%B9%E6%B3%95-929db84d5e84">App開發的4種主流方法</a></li>
+<li><a target="_blank" rel="noopener" href="https://hackmd.io/@WqkHA-SGS0O01qt_nA69mA/HykVz6Jej#3Hybrid-App-%E7%9B%B8%E9%97%9C%E7%9A%84%E9%96%8B%E7%99%BC%E6%96%B9%E5%BC%8Famp%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E5%95%8F%E9%A1%8C">APP製作的技術選擇</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.arshire.com/blog/pwa">PWA介紹 (Progressive Web App)，優、缺點及範例介紹</a></li>
+</ul>
+<p>更多關於我的研究，可藉由 <a href="https://annchoucode.github.io/tags/APP/">tag: App</a> 主題閱讀。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250128/2826999050/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ann Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ann Chou Coding">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Development-notes/APP/20250128/2826999050/" class="post-title-link" itemprop="url">ReactNative / Expo 介紹</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2025-01-28 11:29:15" itemprop="dateCreated datePublished" datetime="2025-01-28T11:29:15+08:00">2025-01-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2025-04-19 10:12:50" itemprop="dateModified" datetime="2025-04-19T10:12:50+08:00">2025-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/" itemprop="url" rel="index"><span itemprop="name">開發筆記</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/APP/" itemprop="url" rel="index"><span itemprop="name">APP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="▍-App-分類"><a href="#▍-App-分類" class="headerlink" title="▍ App 分類"></a>▍ App 分類</h2><p>製作 App 的軟體有很多種，例如 Ionic、React Native、Flutter。在正文開始前，先介紹</p>
+
       
     </div>
 
@@ -561,7 +792,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -574,7 +805,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>
