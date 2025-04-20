@@ -116,7 +116,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">11</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">13</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -126,7 +126,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">6</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">7</span></a>
 
   </li>
   </ul>
@@ -152,6 +152,141 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/1653277596/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ann Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ann Chou Coding">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Development-notes/APP/20250419/1653277596/" class="post-title-link" itemprop="url">Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（1）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2025-04-19 18:16:27" itemprop="dateCreated datePublished" datetime="2025-04-19T18:16:27+08:00">2025-04-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2025-04-20 10:31:36" itemprop="dateModified" datetime="2025-04-20T10:31:36+08:00">2025-04-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/" itemprop="url" rel="index"><span itemprop="name">開發筆記</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/APP/" itemprop="url" rel="index"><span itemprop="name">APP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在進入與 Firebase 和 Azure 串聯之前，這篇文章會先做知識前導。</p>
+<h2 id="▍-React-Native-Expo-推播通知"><a href="#▍-React-Native-Expo-推播通知" class="headerlink" title="▍ React Native &#x2F; Expo 推播通知"></a>▍ React Native &#x2F; Expo 推播通知</h2><p>Expo 本身就存有自己的推播通知模組 <a target="_blank" rel="noopener" href="https://docs.expo.dev/versions/latest/sdk/notifications/">Expo Notifications</a>，但我們也可以串聯其他具推播功能的平台。兩種做法也關乎我們要使用哪一種 Workflow，關於 Workflow 可以閱讀文章 <a href="https://annchoucode.github.io/Development-notes/APP/20250419/93694046#react-native--expo-workflow">「React Native &#x2F; Expo Workflow」</a>。</p>
+<table>
+<thead>
+<tr>
+<th>功能 &#x2F; 能力</th>
+<th>Managed Workflow<br>（EAS + Expo Notifications）</th>
+<th>Bare Workflow<br>（原生整合 FCM &#x2F; APNs）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>工具</strong></td>
+<td>Expo API 內建支援<br>不須再分 FCM &#x2F; APNs</td>
+<td>自行串接 SDK，例如 Firebase</td>
+</tr>
+<tr>
+<td><strong>工具運作方式</strong></td>
+<td>使用 <code>ExponentPushToken</code></td>
+<td>第三方 SDK 產生的 Device Token</td>
+</tr>
+<tr>
+<td><strong>基本推播通知</strong><br>（標題、內文、點擊導頁）</td>
+<td>支援</td>
+<td>支援</td>
+</tr>
+<tr>
+<td><strong>富通知</strong><br>（圖片、大圖、互動按鈕）</td>
+<td>支援有限</td>
+<td>支援</td>
+</tr>
+<tr>
+<td><strong>靜默通知</strong><br>（Silent &#x2F; Background Data）</td>
+<td>部分支援</td>
+<td>支援</td>
+</tr>
+<tr>
+<td><strong>整合第三方服務</strong><br>（Azure &#x2F; OneSignal）</td>
+<td>不支援</td>
+<td>可串接 REST API &#x2F; SDK</td>
+</tr>
+<tr>
+<td><strong>原生推播設定控制</strong><br>（頻道、分類、優先級）</td>
+<td>部分支援，依 JS 設定</td>
+<td>支援</td>
+</tr>
+<tr>
+<td><strong>整合與開發難度</strong></td>
+<td>最簡單、快速</td>
+<td>較高，需原生知識</td>
+</tr>
+</tbody></table>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Development-notes/APP/20250419/1653277596/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -268,7 +403,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2025-04-19 11:11:01 / 修改時間：15:33:55" itemprop="dateCreated datePublished" datetime="2025-04-19T11:11:01+08:00">2025-04-19</time>
+              <time title="創建時間：2025-04-19 11:11:01 / 修改時間：21:19:46" itemprop="dateCreated datePublished" datetime="2025-04-19T11:11:01+08:00">2025-04-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -316,10 +451,10 @@
 </tr>
 <tr>
 <td>使用框架／平台</td>
-<td>Xcode、Android Studio</td>
-<td>React Native、Flutter、Xamarin</td>
+<td>Xcode、<br>Android Studio</td>
+<td>React Native、<br>Flutter、Xamarin</td>
 <td>Ionic、Cordova、Capacitor</td>
-<td>Vue.js、React.js、Angular + PWA 支援</td>
+<td>Vue.js、React.js、Angular<br>以上搭配 PWA 支援</td>
 </tr>
 <tr>
 <td>原生功能支援</td>
@@ -330,9 +465,9 @@
 </tr>
 <tr>
 <td>安裝方式</td>
-<td>App Store &#x2F; Google Play</td>
-<td>App Store &#x2F; Google Play</td>
-<td>App Store &#x2F; Google Play</td>
+<td>App Store、<br>Google Play</td>
+<td>App Store、<br>Google Play</td>
+<td>App Store、<br>Google Play</td>
 <td>免安裝，直接開啟</td>
 </tr>
 <tr>
@@ -344,15 +479,15 @@
 </tr>
 <tr>
 <td>推播通知支援</td>
-<td>✅</td>
-<td>✅</td>
+<td>支援</td>
+<td>支援</td>
 <td>需設定 plugin</td>
 <td>限支援 PWA 瀏覽器</td>
 </tr>
 <tr>
 <td>離線功能</td>
-<td>✅</td>
-<td>✅</td>
+<td>支援</td>
+<td>支援</td>
 <td>視 plugin 支援</td>
 <td>僅部分瀏覽器支援</td>
 </tr>
@@ -807,7 +942,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -820,7 +955,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>

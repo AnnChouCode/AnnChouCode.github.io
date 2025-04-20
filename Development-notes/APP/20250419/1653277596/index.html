@@ -20,21 +20,25 @@
     var CONFIG = {"hostname":"annchoucode.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="此篇作為 此部落格 App 技術文 的前導介紹，概述 App 種類差異。 ▍ App 種類比較開發 App 的軟體有很多種，例如 Ionic、React Native、Flutter…。不過我們在決定要使用哪一套工具前，可以先了解 App 要使用多少手機原生功能、人力技術、效能等資訊。    項目 Native Cross-platform Hybrid Web App &#x2F; PWA">
+  <meta name="description" content="在進入與 Firebase 和 Azure 串聯之前，這篇文章會先做知識前導。 ▍ React Native &#x2F; Expo 推播通知Expo 本身就存有自己的推播通知模組 Expo Notifications，但我們也可以串聯其他具推播功能的平台。兩種做法也關乎我們要使用哪一種 Workflow，關於 Workflow 可以閱讀文章 「React Native &#x2F; Expo W">
 <meta property="og:type" content="article">
-<meta property="og:title" content="App 種類概述">
-<meta property="og:url" content="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/4178738459/index.html">
+<meta property="og:title" content="Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（1）">
+<meta property="og:url" content="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/1653277596/index.html">
 <meta property="og:site_name" content="Ann Chou Coding">
-<meta property="og:description" content="此篇作為 此部落格 App 技術文 的前導介紹，概述 App 種類差異。 ▍ App 種類比較開發 App 的軟體有很多種，例如 Ionic、React Native、Flutter…。不過我們在決定要使用哪一套工具前，可以先了解 App 要使用多少手機原生功能、人力技術、效能等資訊。    項目 Native Cross-platform Hybrid Web App &#x2F; PWA">
+<meta property="og:description" content="在進入與 Firebase 和 Azure 串聯之前，這篇文章會先做知識前導。 ▍ React Native &#x2F; Expo 推播通知Expo 本身就存有自己的推播通知模組 Expo Notifications，但我們也可以串聯其他具推播功能的平台。兩種做法也關乎我們要使用哪一種 Workflow，關於 Workflow 可以閱讀文章 「React Native &#x2F; Expo W">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2025-04-19T03:11:01.000Z">
-<meta property="article:modified_time" content="2025-04-19T13:19:46.804Z">
+<meta property="article:published_time" content="2025-04-19T10:16:27.000Z">
+<meta property="article:modified_time" content="2025-04-20T02:31:36.896Z">
 <meta property="article:author" content="Ann Chou">
 <meta property="article:tag" content="前端">
 <meta property="article:tag" content="APP">
+<meta property="article:tag" content="ReactNative">
+<meta property="article:tag" content="Expo">
+<meta property="article:tag" content="Firebase">
+<meta property="article:tag" content="Azure">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/4178738459/">
+<link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/1653277596/">
 
 
 <script id="page-configurations">
@@ -47,7 +51,7 @@
   };
 </script>
 
-  <title>App 種類概述 | Ann Chou Coding</title>
+  <title>Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（1） | Ann Chou Coding</title>
   
 
 
@@ -162,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/4178738459/">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/1653277596/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -175,7 +179,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          App 種類概述
+          Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（1）
         </h1>
 
         <div class="post-meta">
@@ -184,10 +188,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              
 
-              <time title="創建時間：2025-04-19 11:11:01 / 修改時間：21:19:46" itemprop="dateCreated datePublished" datetime="2025-04-19T11:11:01+08:00">2025-04-19</time>
+              <time title="創建時間：2025-04-19 18:16:27" itemprop="dateCreated datePublished" datetime="2025-04-19T18:16:27+08:00">2025-04-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2025-04-20 10:31:36" itemprop="dateModified" datetime="2025-04-20T10:31:36+08:00">2025-04-20</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -213,82 +223,75 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>此篇作為 <a href="https://annchoucode.github.io/tags/APP/">此部落格 App 技術文</a> 的前導介紹，概述 App 種類差異。</p>
-<h2 id="▍-App-種類比較"><a href="#▍-App-種類比較" class="headerlink" title="▍ App 種類比較"></a>▍ App 種類比較</h2><p>開發 App 的軟體有很多種，例如 Ionic、React Native、Flutter…。<br>不過我們在決定要使用哪一套工具前，可以先了解 App 要使用多少手機原生功能、人力技術、效能等資訊。</p>
+        <p>在進入與 Firebase 和 Azure 串聯之前，這篇文章會先做知識前導。</p>
+<h2 id="▍-React-Native-Expo-推播通知"><a href="#▍-React-Native-Expo-推播通知" class="headerlink" title="▍ React Native &#x2F; Expo 推播通知"></a>▍ React Native &#x2F; Expo 推播通知</h2><p>Expo 本身就存有自己的推播通知模組 <a target="_blank" rel="noopener" href="https://docs.expo.dev/versions/latest/sdk/notifications/">Expo Notifications</a>，但我們也可以串聯其他具推播功能的平台。兩種做法也關乎我們要使用哪一種 Workflow，關於 Workflow 可以閱讀文章 <a href="https://annchoucode.github.io/Development-notes/APP/20250419/93694046#react-native--expo-workflow">「React Native &#x2F; Expo Workflow」</a>。</p>
 <table>
 <thead>
 <tr>
-<th>項目</th>
-<th>Native</th>
-<th>Cross-platform</th>
-<th>Hybrid</th>
-<th>Web App &#x2F; PWA</th>
+<th>功能 &#x2F; 能力</th>
+<th>Managed Workflow<br>（EAS + Expo Notifications）</th>
+<th>Bare Workflow<br>（原生整合 FCM &#x2F; APNs）</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>使用技術</td>
-<td>原生語言</td>
-<td>JS&#x2F;Dart + 框架</td>
-<td>Web 技術 + WebView</td>
-<td>純 Web 技術</td>
+<td><strong>工具</strong></td>
+<td>Expo API 內建支援<br>不須再分 FCM &#x2F; APNs</td>
+<td>自行串接 SDK，例如 Firebase</td>
 </tr>
 <tr>
-<td>使用框架／平台</td>
-<td>Xcode、<br>Android Studio</td>
-<td>React Native、<br>Flutter、Xamarin</td>
-<td>Ionic、Cordova、Capacitor</td>
-<td>Vue.js、React.js、Angular<br>以上搭配 PWA 支援</td>
+<td><strong>工具運作方式</strong></td>
+<td>使用 <code>ExponentPushToken</code></td>
+<td>第三方 SDK 產生的 Device Token</td>
 </tr>
 <tr>
-<td>原生功能支援</td>
-<td>完整</td>
-<td>高</td>
-<td>有限</td>
-<td>有限</td>
-</tr>
-<tr>
-<td>安裝方式</td>
-<td>App Store、<br>Google Play</td>
-<td>App Store、<br>Google Play</td>
-<td>App Store、<br>Google Play</td>
-<td>免安裝，直接開啟</td>
-</tr>
-<tr>
-<td>效能</td>
-<td>⭐⭐⭐⭐</td>
-<td>⭐⭐⭐</td>
-<td>⭐⭐</td>
-<td>⭐</td>
-</tr>
-<tr>
-<td>推播通知支援</td>
+<td><strong>基本推播通知</strong><br>（標題、內文、點擊導頁）</td>
 <td>支援</td>
 <td>支援</td>
-<td>需設定 plugin</td>
-<td>限支援 PWA 瀏覽器</td>
 </tr>
 <tr>
-<td>離線功能</td>
+<td><strong>富通知</strong><br>（圖片、大圖、互動按鈕）</td>
+<td>支援有限</td>
 <td>支援</td>
-<td>支援</td>
-<td>視 plugin 支援</td>
-<td>僅部分瀏覽器支援</td>
 </tr>
 <tr>
-<td>學習曲線</td>
-<td>高</td>
-<td>中</td>
-<td>相對低</td>
-<td>低</td>
+<td><strong>靜默通知</strong><br>（Silent &#x2F; Background Data）</td>
+<td>部分支援</td>
+<td>支援</td>
+</tr>
+<tr>
+<td><strong>整合第三方服務</strong><br>（Azure &#x2F; OneSignal）</td>
+<td>不支援</td>
+<td>可串接 REST API &#x2F; SDK</td>
+</tr>
+<tr>
+<td><strong>原生推播設定控制</strong><br>（頻道、分類、優先級）</td>
+<td>部分支援，依 JS 設定</td>
+<td>支援</td>
+</tr>
+<tr>
+<td><strong>整合與開發難度</strong></td>
+<td>最簡單、快速</td>
+<td>較高，需原生知識</td>
 </tr>
 </tbody></table>
-<h2 id="▍-相關文章"><a href="#▍-相關文章" class="headerlink" title="▍ 相關文章"></a>▍ 相關文章</h2><p>因為我是 Web 開發者，最近才開始接觸 App 開發，知識認知上還是有限度。<br>附上更深入比較的文章提供參考。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://medium.com/@ianchen0419/app%E9%96%8B%E7%99%BC%E7%9A%844%E7%A8%AE%E4%B8%BB%E6%B5%81%E6%96%B9%E6%B3%95-929db84d5e84">App開發的4種主流方法</a></li>
-<li><a target="_blank" rel="noopener" href="https://hackmd.io/@WqkHA-SGS0O01qt_nA69mA/HykVz6Jej#3Hybrid-App-%E7%9B%B8%E9%97%9C%E7%9A%84%E9%96%8B%E7%99%BC%E6%96%B9%E5%BC%8Famp%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E5%95%8F%E9%A1%8C">APP製作的技術選擇</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.arshire.com/blog/pwa">PWA介紹 (Progressive Web App)，優、缺點及範例介紹</a></li>
+<span id="more"></span>
+
+<h2 id="▍-Firebase"><a href="#▍-Firebase" class="headerlink" title="▍ Firebase"></a>▍ <a target="_blank" rel="noopener" href="https://firebase.google.com/">Firebase</a></h2><ul>
+<li>由 Google 提供，為行動與網頁應用打造的後端平台，包含認證、資料庫、儲存、分析、推播等功能。</li>
+<li>可使用 <a target="_blank" rel="noopener" href="https://firebase.google.com/docs/cloud-messaging?hl=zh-tw">Firebase Cloud Messaging (FCM)</a> 傳送通知到 Android、iOS 和 Web。 </li>
+<li>提供 <a target="_blank" rel="noopener" href="https://firebase.google.com/docs/cloud-messaging/android/topic-messaging?hl=zh-tw">主題訂閱（topic）</a> 和 <a target="_blank" rel="noopener" href="https://firebase.google.com/docs/cloud-messaging/android/device-group?hl=zh-tw">裝置群組（device group）</a> 等方式分類用戶。</li>
 </ul>
-<p>更多關於我的研究，可藉由 <a href="https://annchoucode.github.io/tags/APP/">tag: App</a> 主題閱讀。</p>
+<h2 id="▍-Azure"><a href="#▍-Azure" class="headerlink" title="▍ Azure"></a>▍ <a target="_blank" rel="noopener" href="https://azure.microsoft.com/zh-tw">Azure</a></h2><ul>
+<li>由 Microsoft 提供，適合中大型系統與企業級應用的雲端平台，支援虛擬機、資料庫、AI、IoT、DevOps 等服務。</li>
+<li>使用 <a target="_blank" rel="noopener" href="https://azure.microsoft.com/zh-tw/products/notification-hubs">Azure Notification Hubs</a> 管理和發送推播訊息，支援 Apple（APNs）、Google（FCM）、Microsoft（WNS、MPNS）等多種平台。</li>
+<li>可設定 tag 做分類發送，以及定義 template 發送樣板方便使用樣板字樣推播。</li>
+</ul>
+<h2 id="▍-延伸閱讀"><a href="#▍-延伸閱讀" class="headerlink" title="▍ 延伸閱讀"></a>▍ 延伸閱讀</h2><p>雖然這系列文會以串 Firebase + Azure 為主題，也同時附上 Expo Notifications 供參。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.expo.dev/versions/latest/sdk/notifications/">Expo Notifications</a></li>
+<li><a target="_blank" rel="noopener" href="https://expo.dev/notifications">Expo Push notifications tool</a></li>
+</ul>
+<p>下一篇文章將介紹 Firebase 和 Azure 串聯設定。</p>
 
     </div>
 
@@ -300,6 +303,10 @@
           <div class="post-tags">
               <a href="/tags/Front-End/" rel="tag"># 前端</a>
               <a href="/tags/APP/" rel="tag"># APP</a>
+              <a href="/tags/ReactNative/" rel="tag"># ReactNative</a>
+              <a href="/tags/Expo/" rel="tag"># Expo</a>
+              <a href="/tags/Firebase/" rel="tag"># Firebase</a>
+              <a href="/tags/Azure/" rel="tag"># Azure</a>
           </div>
 
         
@@ -308,13 +315,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Development-notes/CSS/20250128/2826999050/" rel="prev" title="Vite React + Tailwind 4.0 + prettier-plugin-tailwindcss 安裝">
-      <i class="fa fa-chevron-left"></i> Vite React + Tailwind 4.0 + prettier-plugin-tailwindcss 安裝
+    <a href="/Development-notes/APP/20250419/93694046/" rel="prev" title="React Native / Expo 介紹">
+      <i class="fa fa-chevron-left"></i> React Native / Expo 介紹
     </a></div>
-      <div class="post-nav-item">
-    <a href="/Development-notes/APP/20250419/93694046/" rel="next" title="React Native / Expo 介紹">
-      React Native / Expo 介紹 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -373,7 +377,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%96%8D-App-%E7%A8%AE%E9%A1%9E%E6%AF%94%E8%BC%83"><span class="nav-number">1.</span> <span class="nav-text">▍ App 種類比較</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%96%8D-%E7%9B%B8%E9%97%9C%E6%96%87%E7%AB%A0"><span class="nav-number">2.</span> <span class="nav-text">▍ 相關文章</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%96%8D-React-Native-Expo-%E6%8E%A8%E6%92%AD%E9%80%9A%E7%9F%A5"><span class="nav-number">1.</span> <span class="nav-text">▍ React Native &#x2F; Expo 推播通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%96%8D-Firebase"><span class="nav-number">2.</span> <span class="nav-text">▍ Firebase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%96%8D-Azure"><span class="nav-number">3.</span> <span class="nav-text">▍ Azure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%96%8D-%E5%BB%B6%E4%BC%B8%E9%96%B1%E8%AE%80"><span class="nav-number">4.</span> <span class="nav-text">▍ 延伸閱讀</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
