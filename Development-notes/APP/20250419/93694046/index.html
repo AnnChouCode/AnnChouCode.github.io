@@ -27,18 +27,20 @@
 <meta property="og:site_name" content="Ann Chou Coding">
 <meta property="og:description" content="本篇主題是 React Native 小介紹。因為先前在測試 Ionic + PWA 開發，對相機功能實在太失望，結果現在我開始用 React Native &#x2F; Expo 了。如果還不清楚 Ionic 和 Reac Native 能做不同種類的 App，可以先閱讀 App 種類概述 。 React Native &amp; Expo 概述 React Native 是一個由 Facebo">
 <meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://hackmd.io/_uploads/ryXLEvLkge.jpg">
 <meta property="og:image" content="https://hackmd.io/_uploads/ryAya5eyxg.png">
 <meta property="og:image" content="https://hackmd.io/_uploads/Bydjs9eklx.png">
 <meta property="og:image" content="https://hackmd.io/_uploads/HJjetsgJxe.png">
+<meta property="og:image" content="https://hackmd.io/_uploads/SJHOVPUyxe.jpg">
 <meta property="article:published_time" content="2025-04-19T03:11:54.000Z">
-<meta property="article:modified_time" content="2025-04-20T03:11:27.379Z">
+<meta property="article:modified_time" content="2025-04-23T13:03:22.813Z">
 <meta property="article:author" content="Ann Chou">
 <meta property="article:tag" content="前端">
 <meta property="article:tag" content="APP">
 <meta property="article:tag" content="ReactNative">
 <meta property="article:tag" content="Expo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://hackmd.io/_uploads/ryAya5eyxg.png">
+<meta name="twitter:image" content="https://hackmd.io/_uploads/ryXLEvLkge.jpg">
 
 <link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/93694046/">
 
@@ -198,7 +200,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2025-04-20 11:11:27" itemprop="dateModified" datetime="2025-04-20T11:11:27+08:00">2025-04-20</time>
+                <time title="修改時間：2025-04-23 21:03:22" itemprop="dateModified" datetime="2025-04-23T21:03:22+08:00">2025-04-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,9 +237,15 @@
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-expo-app@latest</span><br></pre></td></tr></table></figure>
 <span id="more"></span>
-<p>接著會有一連串問題，</p>
+<p>接著會有一連串問題，回答完畢後專案建置完成</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- Ok to proceed? (y)  y</span><br><span class="line">- Creating an Expo project using the default template. //預設使用default模板</span><br><span class="line"></span><br><span class="line">//提示如果要使用模板指令 -- template 打上名稱</span><br><span class="line">To choose from all available templates pass in the --template arg:</span><br><span class="line">  $ npx create-expo-app --template</span><br><span class="line"></span><br><span class="line">To choose from all available examples pass in the --example arg:</span><br><span class="line">  $ npx create-expo-app --example</span><br></pre></td></tr></table></figure>
-
+<p>建立專案後可至 app.json 修改資料</p>
+<p><strong>slug 命名建議</strong><br>可以把 slug 想成是 GitHub Repo 名稱或代號</p>
+<ul>
+<li>英文小寫</li>
+<li>不含空格或特殊符號（可用 - 或 _）</li>
+<li>保持簡潔易識別<br><img src="https://hackmd.io/_uploads/ryXLEvLkge.jpg" alt="ExpoAppInfo"></li>
+</ul>
 <h2 id="啟動專案"><a href="#啟動專案" class="headerlink" title="啟動專案"></a>啟動專案</h2><ol>
 <li><p>確保手機和電腦在相同網路環境。</p>
 </li>
@@ -264,6 +272,13 @@
 <li>EAS 編譯完成後會提供一個預覽網址，使用 Expo Go 開啟</li>
 </ol>
 <h2 id="React-Native-Expo-Workflow"><a href="#React-Native-Expo-Workflow" class="headerlink" title="React Native &#x2F; Expo Workflow"></a>React Native &#x2F; Expo Workflow</h2><p>因為在 Build 專案的段落有提到無法用 EAS 編譯的情境，所以也來介紹 Expo 的 Workflow 吧。<br>原本的 Expo 是沒有 android 或 ios 資料夾的，但 Firebase 需要經過額外設定流程，所以必須透過 <code>npx expo prebuild</code> 將 workflow 切換至 Bare Workflow，此時便會依照你目前開發電腦的系統在專案中產生 android 或 ios 資料夾。而未來要測試這個推播功能，也無法使用 Expo 原生提供的辦法測試，之後再寫一篇新文介紹推播。<br>如果你有其中一項功能是必須透過非 EAS build 的方式執行，其他功能也還是可以用 EAS build 做測試！只是 EAS 無法 build 出那些要使用 android 或 ios 資料夾的功能而已。而 Android Studio、Xcode 等非 EAS 方法是可以 build 出完整功能的。<br><img src="https://hackmd.io/_uploads/HJjetsgJxe.png" alt="ExpoWorkflow"></p>
+<p>在 Windows 電腦輸入 npx expo prebuild 後，app.json 檔案的 android 會出現 package，推薦修改格式可以參考 com.&lt;公司或開發者名稱&gt;.&lt;產品或應用名稱&gt; ​<br><strong>命名規則</strong></p>
+<ul>
+<li>全小寫</li>
+<li>僅限英文字母、數字、底線（不可開頭）</li>
+<li>至少兩層（建議三層以上）</li>
+<li>不能與其他已上架 App 相同（否則 Google Play 不讓你上架）<br><img src="https://hackmd.io/_uploads/SJHOVPUyxe.jpg" alt="ExpoPrebuildAndroid"></li>
+</ul>
 <p>— 文章同步發佈於 <a target="_blank" rel="noopener" href="https://vocus.cc/article/68035057fd897800013a4d91">Vocus</a></p>
 
     </div>
