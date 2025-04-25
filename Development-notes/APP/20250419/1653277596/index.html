@@ -28,7 +28,7 @@
 <meta property="og:description" content="在進入與 Firebase 和 Azure 串聯之前，這篇文章會先做知識前導。 React Native &#x2F; Expo 推播通知Expo 本身就存有自己的推播通知模組 Expo Notifications，但我們也可以串聯其他具推播功能的平台。兩種做法也關乎我們要使用哪一種 Workflow，關於 Workflow 可以閱讀文章 「React Native &#x2F; Expo Wor">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2025-04-19T10:16:27.000Z">
-<meta property="article:modified_time" content="2025-04-20T03:11:04.839Z">
+<meta property="article:modified_time" content="2025-04-25T13:06:23.029Z">
 <meta property="article:author" content="Ann Chou">
 <meta property="article:tag" content="前端">
 <meta property="article:tag" content="APP">
@@ -36,6 +36,8 @@
 <meta property="article:tag" content="Expo">
 <meta property="article:tag" content="Firebase">
 <meta property="article:tag" content="Azure">
+<meta property="article:tag" content="FirebaseCloudMessaging">
+<meta property="article:tag" content="AzureNotificationHub">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250419/1653277596/">
@@ -125,7 +127,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">13</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">15</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -135,7 +137,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">7</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">8</span></a>
 
   </li>
   </ul>
@@ -196,7 +198,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2025-04-20 11:11:04" itemprop="dateModified" datetime="2025-04-20T11:11:04+08:00">2025-04-20</time>
+                <time title="修改時間：2025-04-25 21:06:23" itemprop="dateModified" datetime="2025-04-25T21:06:23+08:00">2025-04-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -307,6 +309,8 @@
               <a href="/tags/Expo/" rel="tag"># Expo</a>
               <a href="/tags/Firebase/" rel="tag"># Firebase</a>
               <a href="/tags/Azure/" rel="tag"># Azure</a>
+              <a href="/tags/FirebaseCloudMessaging/" rel="tag"># FirebaseCloudMessaging</a>
+              <a href="/tags/AzureNotificationHub/" rel="tag"># AzureNotificationHub</a>
           </div>
 
         
@@ -318,7 +322,10 @@
     <a href="/Development-notes/APP/20250419/93694046/" rel="prev" title="React Native / Expo 介紹">
       <i class="fa fa-chevron-left"></i> React Native / Expo 介紹
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/Development-notes/APP/20250425/2300425267/" rel="next" title="Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（2）">
+      Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（2） <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -391,7 +398,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -404,7 +411,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>

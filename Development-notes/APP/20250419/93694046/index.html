@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://hackmd.io/_uploads/HJjetsgJxe.png">
 <meta property="og:image" content="https://hackmd.io/_uploads/SJHOVPUyxe.jpg">
 <meta property="article:published_time" content="2025-04-19T03:11:54.000Z">
-<meta property="article:modified_time" content="2025-04-23T13:03:22.813Z">
+<meta property="article:modified_time" content="2025-04-24T13:21:50.029Z">
 <meta property="article:author" content="Ann Chou">
 <meta property="article:tag" content="前端">
 <meta property="article:tag" content="APP">
@@ -129,7 +129,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">13</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">15</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -139,7 +139,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">7</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">8</span></a>
 
   </li>
   </ul>
@@ -200,7 +200,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2025-04-23 21:03:22" itemprop="dateModified" datetime="2025-04-23T21:03:22+08:00">2025-04-23</time>
+                <time title="修改時間：2025-04-24 21:21:50" itemprop="dateModified" datetime="2025-04-24T21:21:50+08:00">2025-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -272,7 +272,7 @@
 <li>EAS 編譯完成後會提供一個預覽網址，使用 Expo Go 開啟</li>
 </ol>
 <h2 id="React-Native-Expo-Workflow"><a href="#React-Native-Expo-Workflow" class="headerlink" title="React Native &#x2F; Expo Workflow"></a>React Native &#x2F; Expo Workflow</h2><p>因為在 Build 專案的段落有提到無法用 EAS 編譯的情境，所以也來介紹 Expo 的 Workflow 吧。<br>原本的 Expo 是沒有 android 或 ios 資料夾的，但 Firebase 需要經過額外設定流程，所以必須透過 <code>npx expo prebuild</code> 將 workflow 切換至 Bare Workflow，此時便會依照你目前開發電腦的系統在專案中產生 android 或 ios 資料夾。而未來要測試這個推播功能，也無法使用 Expo 原生提供的辦法測試，之後再寫一篇新文介紹推播。<br>如果你有其中一項功能是必須透過非 EAS build 的方式執行，其他功能也還是可以用 EAS build 做測試！只是 EAS 無法 build 出那些要使用 android 或 ios 資料夾的功能而已。而 Android Studio、Xcode 等非 EAS 方法是可以 build 出完整功能的。<br><img src="https://hackmd.io/_uploads/HJjetsgJxe.png" alt="ExpoWorkflow"></p>
-<p>在 Windows 電腦輸入 npx expo prebuild 後，app.json 檔案的 android 會出現 package，推薦修改格式可以參考 com.&lt;公司或開發者名稱&gt;.&lt;產品或應用名稱&gt; ​<br><strong>命名規則</strong></p>
+<p>在 Windows 電腦輸入 npx expo prebuild 後，app.json 檔案的 android 會出現 package，推薦修改格式可以參考 <code>com.&lt;公司或開發者名稱&gt;.&lt;產品或應用名稱&gt; ​</code><br><strong>命名規則</strong></p>
 <ul>
 <li>全小寫</li>
 <li>僅限英文字母、數字、底線（不可開頭）</li>
@@ -380,7 +380,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -393,7 +393,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"annchoucode.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="以下流程是針對 Android 推播通知設定，請在 windows 電腦上執行！這次的主題是 Expo 串接 Firebase 和 Azure，Azure 運行流程、編譯 App 和除錯會放在之後的文章。 前置準備在這篇文章中，你需要事先準備  Google 帳號 Firebase 帳號 Azure 帳號 一個 React Native &#x2F; Expo 專案（安裝方法參考） 安裝指令 np">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（2）">
+<meta property="og:url" content="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250425/2300425267/index.html">
+<meta property="og:site_name" content="Ann Chou Coding">
+<meta property="og:description" content="以下流程是針對 Android 推播通知設定，請在 windows 電腦上執行！這次的主題是 Expo 串接 Firebase 和 Azure，Azure 運行流程、編譯 App 和除錯會放在之後的文章。 前置準備在這篇文章中，你需要事先準備  Google 帳號 Firebase 帳號 Azure 帳號 一個 React Native &#x2F; Expo 專案（安裝方法參考） 安裝指令 np">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://hackmd.io/_uploads/r1FKEwUJee.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/SJqKVw8yxl.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/HkcKNwI1el.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/r19Y4v8Jgl.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/BJ9FNvIkge.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/B19K4P8kee.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/HJX9A2Pklx.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/rJcKEDLkex.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/H1YtED81gx.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/B15F4DLkxe.jpg">
+<meta property="article:published_time" content="2025-04-25T13:05:02.000Z">
+<meta property="article:modified_time" content="2025-04-25T13:08:46.348Z">
+<meta property="article:author" content="Ann Chou">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="APP">
+<meta property="article:tag" content="ReactNative">
+<meta property="article:tag" content="Expo">
+<meta property="article:tag" content="Firebase">
+<meta property="article:tag" content="Azure">
+<meta property="article:tag" content="FirebaseCloudMessaging">
+<meta property="article:tag" content="AzureNotificationHub">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hackmd.io/_uploads/r1FKEwUJee.jpg">
+
+<link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250425/2300425267/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（2） | Ann Chou Coding</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ann Chou Coding</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">15</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">8</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250425/2300425267/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ann Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ann Chou Coding">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（2）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-04-25 21:05:02 / 修改時間：21:08:46" itemprop="dateCreated datePublished" datetime="2025-04-25T21:05:02+08:00">2025-04-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/" itemprop="url" rel="index"><span itemprop="name">開發筆記</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/APP/" itemprop="url" rel="index"><span itemprop="name">APP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>以下流程是針對 Android 推播通知設定，請在 windows 電腦上執行！<br>這次的主題是 Expo 串接 Firebase 和 Azure，Azure 運行流程、編譯 App 和除錯會放在之後的文章。</p>
+<h2 id="前置準備"><a href="#前置準備" class="headerlink" title="前置準備"></a>前置準備</h2><p>在這篇文章中，你需要事先準備</p>
+<ul>
+<li>Google 帳號</li>
+<li><a target="_blank" rel="noopener" href="https://firebase.google.com/">Firebase</a> 帳號</li>
+<li><a target="_blank" rel="noopener" href="https://azure.microsoft.com/zh-tw">Azure</a> 帳號</li>
+<li>一個 React Native &#x2F; Expo 專案（<a href="https://annchoucode.github.io/Development-notes/APP/20250419/93694046/">安裝方法參考</a>）<ul>
+<li>安裝指令 <code>npx create-expo-app@latest</code></li>
+<li>使用 <code>npx expo prebuild</code> 生成 android 資料夾</li>
+<li>修改專案 app.json 檔案中的 <code>android package</code> 名稱</li>
+</ul>
+</li>
+<li>安裝 <a target="_blank" rel="noopener" href="https://developer.android.com/studio?hl=zh-tw">Android Studio</a></li>
+</ul>
+<h2 id="Firebase-設定"><a href="#Firebase-設定" class="headerlink" title="Firebase 設定"></a>Firebase 設定</h2><h3 id="1-建立-Firebase-Android-應用程式"><a href="#1-建立-Firebase-Android-應用程式" class="headerlink" title="1. 建立 Firebase Android 應用程式"></a>1. 建立 Firebase Android 應用程式</h3><p>在 <a target="_blank" rel="noopener" href="https://firebase.google.com/">Firebase</a> 建立一個新專案後，新增 Android 應用程式<br><img src="https://hackmd.io/_uploads/r1FKEwUJee.jpg" alt="Firebase_CreateAndroid"></p>
+<span id="more"></span>
+<h3 id="2-註冊-Android-應用程式"><a href="#2-註冊-Android-應用程式" class="headerlink" title="2. 註冊 Android 應用程式"></a>2. 註冊 Android 應用程式</h3><p>如果在上一篇文章中有設定專案 app.json 的 <code>android package</code> 辨識名稱，請在這裡填入，Firebase 會以這個名稱為辨識<br><img src="https://hackmd.io/_uploads/SJqKVw8yxl.jpg" alt="FirebaseCreateAndroid"></p>
+<h3 id="3-加入-google-services-設定檔"><a href="#3-加入-google-services-設定檔" class="headerlink" title="3. 加入 google-services 設定檔"></a>3. 加入 google-services 設定檔</h3><p>下載畫面中提供的 google-services.json 檔案，放入 android&#x2F;app 資料夾中<br><img src="https://hackmd.io/_uploads/HkcKNwI1el.jpg" alt="FirebaseCreateAndroid-2"></p>
+<h3 id="4-設定-Firebase-SDK"><a href="#4-設定-Firebase-SDK" class="headerlink" title="4. 設定 Firebase SDK"></a>4. 設定 Firebase SDK</h3><p>這是我覺得整個設定中最難的步驟…沒有原生知識真的搞不清楚狀況，完全按照 Firebase 貼也可能在 Sync 報錯，翻了好多網友留言才試出來… 🥲。<br>將畫面提供的程式碼貼入專案內,請注意你是 gradle 或 gradle.tks，本範例使用 gradle，所以切換至 Groovy 版本程式碼。總共有兩個 build.gradle 檔案，請特別留意檔案路徑！<br>以下程式碼可以在 VS code 或是 Android Studio 貼上都可以，推薦使用 Android Studio，雖然設定繁雜，但好處是會有格式報錯，之後我們打包除錯還是會用到。</p>
+<h4 id="方法-1：使用-VS-code-設定"><a href="#方法-1：使用-VS-code-設定" class="headerlink" title="- 方法 1：使用 VS code 設定"></a>- 方法 1：使用 VS code 設定</h4><p>android 專案資料夾的 build.gradle</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// android/build.gradle</span><br><span class="line">classpath &#x27;com.google.gms:google-services:4.4.2&#x27;</span><br></pre></td></tr></table></figure>
+<p><img src="https://hackmd.io/_uploads/r19Y4v8Jgl.jpg" alt="FirebaseCreateAndroid-3"></p>
+<p>android 專案資料夾 &#x2F; App module 的 build.gradle</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// android/app/build.gradle</span><br><span class="line">apply plugin: &#x27;com.google.gms.google-services&#x27;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// android/app/build.gradle</span><br><span class="line">implementation platform(&#x27;com.google.firebase:firebase-bom:33.11.0&#x27;) // Firebase BoM</span><br><span class="line">implementation &#x27;com.google.firebase:firebase-messaging&#x27; // 接收推播</span><br></pre></td></tr></table></figure>
+<p><img src="https://hackmd.io/_uploads/BJ9FNvIkge.jpg" alt="FirebaseCreateAndroid-4"><img src="https://hackmd.io/_uploads/B19K4P8kee.jpg" alt="FirebaseCreateAndroid-5"></p>
+<h4 id="方法-2：使用-Android-Studio-設定"><a href="#方法-2：使用-Android-Studio-設定" class="headerlink" title="- 方法 2：使用 Android Studio 設定"></a>- 方法 2：使用 Android Studio 設定</h4><p>如果你想使用 Android Studio 設定，建議先做 JDK 17 配置。JDK 17 是 Java Development Kit（Java 開發工具包）的其中一個版本，是 Oracle 和 Java 社群釋出的 LTS（長期支援）版本。我們之後把程式碼編譯成可安裝的 APK 也會用到！</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html">jdk-17.0.12-windows</a> 下載並安裝</li>
+<li>重新啟動電腦</li>
+<li>設定 JDK<br>- <a target="_blank" rel="noopener" href="https://blog.csdn.net/tiehou/article/details/129575138">手動設定 JDK 17</a><br>- <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/azure/notification-hubs/android-sdk#add-google-play-services-to-the-project">透過 Android Studio 設定</a> (但我沒設成功… 🫠)</li>
+<li>在 Android Studio 開啟終端機輸入<code>./gradlew --version</code> 確認設定成果<br><img src="https://hackmd.io/_uploads/HJX9A2Pklx.jpg" alt="FirebaseCreateAndroid-6-JDK-2"></li>
+<li>Android Studio 開啟專案中的 android 資料夾。當檔案有變更時，會出現 Sync Now 按鈕，點選後可藉由下方 Build 觀看是否報錯。<br><img src="https://hackmd.io/_uploads/rJcKEDLkex.jpg" alt="FirebaseCreateAndroid-6-AndroidStudio"></li>
+</ol>
+<h3 id="5-完成-Firebase-Android-設定"><a href="#5-完成-Firebase-Android-設定" class="headerlink" title="5. 完成 Firebase Android 設定"></a>5. 完成 Firebase Android 設定</h3><p>以上設定完成後，回到 Firebase 的 Android 應用程式選擇確定建立。</p>
+<h3 id="6-確認-Firebase-Cloud-Messaging-API（V1）-啟用"><a href="#6-確認-Firebase-Cloud-Messaging-API（V1）-啟用" class="headerlink" title="6. 確認 Firebase Cloud Messaging API（V1） 啟用"></a>6. 確認 Firebase Cloud Messaging API（V1） 啟用</h3><p>在 Firebase Android 專案進入「雲端通訊」頁籤，確認 FCM API（V1） 是啟用狀態。查看一下服務帳戶，應該是自動連接 Google console 帳戶的。<br><img src="https://hackmd.io/_uploads/H1YtED81gx.jpg" alt="FirebaseAzure-1"></p>
+<p>我們已經完成最難的部分啦！ 🙌<br>歡呼一下，接下來就是設定 Azure 了。</p>
+<h2 id="Azure-連接"><a href="#Azure-連接" class="headerlink" title="Azure 連接"></a>Azure 連接</h2><h3 id="1-建立-Azure-通知中樞"><a href="#1-建立-Azure-通知中樞" class="headerlink" title="1. 建立 Azure 通知中樞"></a>1. 建立 Azure 通知中樞</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/azure/notification-hubs/create-notification-hub-portal">建立通知中樞方法</a></p>
+<h3 id="2-串接-Firebase-和-Azure"><a href="#2-串接-Firebase-和-Azure" class="headerlink" title="2. 串接 Firebase 和 Azure"></a>2. 串接 Firebase 和 Azure</h3><ol>
+<li>開啟 Firebase Android 應用程式中的「服務帳戶」頁籤，下載金鑰檔案</li>
+<li>開啟剛才建立的 Azure 通知中樞，切到 FCM v1（舊版 FCM 已經在 2024 停用）</li>
+<li>在 Azure 貼上 Firebase 金鑰，按下儲存<br>  <img src="https://hackmd.io/_uploads/B15F4DLkxe.jpg" alt="FirebaseAzure-2"></li>
+</ol>
+<p>🎉 完工啦~！<br>文末附上 iOS 設定文件，因為 iOS 需要先付費申請 Apple 開發者帳號，我也沒有 Apple 筆電，就讓我引用教學文件代替吧。</p>
+<h2 id="iOS-設定文件"><a href="#iOS-設定文件" class="headerlink" title="iOS 設定文件"></a>iOS 設定文件</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/azure/notification-hubs/ios-sdk-get-started">教學課程：設定 iOS 應用程式以使用 Azure 通知中樞</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Front-End/" rel="tag"># 前端</a>
+              <a href="/tags/APP/" rel="tag"># APP</a>
+              <a href="/tags/ReactNative/" rel="tag"># ReactNative</a>
+              <a href="/tags/Expo/" rel="tag"># Expo</a>
+              <a href="/tags/Firebase/" rel="tag"># Firebase</a>
+              <a href="/tags/Azure/" rel="tag"># Azure</a>
+              <a href="/tags/FirebaseCloudMessaging/" rel="tag"># FirebaseCloudMessaging</a>
+              <a href="/tags/AzureNotificationHub/" rel="tag"># AzureNotificationHub</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Development-notes/APP/20250419/1653277596/" rel="prev" title="Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（1）">
+      <i class="fa fa-chevron-left"></i> Expo 推播通知（Android） - 與 Firebase 和 Azure 合作（1）
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E6%BA%96%E5%82%99"><span class="nav-number">1.</span> <span class="nav-text">前置準備</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Firebase-%E8%A8%AD%E5%AE%9A"><span class="nav-number">2.</span> <span class="nav-text">Firebase 設定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BB%BA%E7%AB%8B-Firebase-Android-%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">1. 建立 Firebase Android 應用程式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%A8%BB%E5%86%8A-Android-%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">2. 註冊 Android 應用程式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8A%A0%E5%85%A5-google-services-%E8%A8%AD%E5%AE%9A%E6%AA%94"><span class="nav-number">2.3.</span> <span class="nav-text">3. 加入 google-services 設定檔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%A8%AD%E5%AE%9A-Firebase-SDK"><span class="nav-number">2.4.</span> <span class="nav-text">4. 設定 Firebase SDK</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95-1%EF%BC%9A%E4%BD%BF%E7%94%A8-VS-code-%E8%A8%AD%E5%AE%9A"><span class="nav-number">2.4.1.</span> <span class="nav-text">- 方法 1：使用 VS code 設定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95-2%EF%BC%9A%E4%BD%BF%E7%94%A8-Android-Studio-%E8%A8%AD%E5%AE%9A"><span class="nav-number">2.4.2.</span> <span class="nav-text">- 方法 2：使用 Android Studio 設定</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%AE%8C%E6%88%90-Firebase-Android-%E8%A8%AD%E5%AE%9A"><span class="nav-number">2.5.</span> <span class="nav-text">5. 完成 Firebase Android 設定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%A2%BA%E8%AA%8D-Firebase-Cloud-Messaging-API%EF%BC%88V1%EF%BC%89-%E5%95%9F%E7%94%A8"><span class="nav-number">2.6.</span> <span class="nav-text">6. 確認 Firebase Cloud Messaging API（V1） 啟用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Azure-%E9%80%A3%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">Azure 連接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BB%BA%E7%AB%8B-Azure-%E9%80%9A%E7%9F%A5%E4%B8%AD%E6%A8%9E"><span class="nav-number">3.1.</span> <span class="nav-text">1. 建立 Azure 通知中樞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%B2%E6%8E%A5-Firebase-%E5%92%8C-Azure"><span class="nav-number">3.2.</span> <span class="nav-text">2. 串接 Firebase 和 Azure</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS-%E8%A8%AD%E5%AE%9A%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">iOS 設定文件</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ann Chou</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ann Chou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
