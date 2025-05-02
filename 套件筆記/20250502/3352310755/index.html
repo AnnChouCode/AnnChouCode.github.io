@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"annchoucode.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Pagintaion 套件 + Axios API 請求範例 一、官網資源pagination 官網：https:&#x2F;&#x2F;pagination.js.org&#x2F;docs&#x2F;index.html可由此處下載 css 原始檔客製 https:&#x2F;&#x2F;pagination.js.org&#x2F;docs&#x2F;index.html#Theme 二、CDN 安裝頁碼 pagination.scss（非必要引入，也可以從官網下載原始">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【套件筆記 - JS】頁碼 Pagination.js">
+<meta property="og:url" content="https://annchoucode.github.io/AnnChouCode.github.io/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/3352310755/index.html">
+<meta property="og:site_name" content="Ann Chou Coding">
+<meta property="og:description" content="Pagintaion 套件 + Axios API 請求範例 一、官網資源pagination 官網：https:&#x2F;&#x2F;pagination.js.org&#x2F;docs&#x2F;index.html可由此處下載 css 原始檔客製 https:&#x2F;&#x2F;pagination.js.org&#x2F;docs&#x2F;index.html#Theme 二、CDN 安裝頁碼 pagination.scss（非必要引入，也可以從官網下載原始">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://hackmd.io/_uploads/Bk1ashWexg.jpg">
+<meta property="og:image" content="https://hackmd.io/_uploads/Sk1ashblge.jpg">
+<meta property="article:published_time" content="2025-05-02T03:51:46.000Z">
+<meta property="article:modified_time" content="2025-05-02T03:52:35.806Z">
+<meta property="article:author" content="Ann Chou">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="套件筆記">
+<meta property="article:tag" content="頁碼">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hackmd.io/_uploads/Bk1ashWexg.jpg">
+
+<link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/3352310755/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>【套件筆記 - JS】頁碼 Pagination.js | Ann Chou Coding</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ann Chou Coding</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">19</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">10</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/3352310755/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ann Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ann Chou Coding">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【套件筆記 - JS】頁碼 Pagination.js
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-05-02 11:51:46 / 修改時間：11:52:35" itemprop="dateCreated datePublished" datetime="2025-05-02T11:51:46+08:00">2025-05-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/" itemprop="url" rel="index"><span itemprop="name">套件筆記</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Pagintaion 套件 + Axios API 請求範例<br><img src="https://hackmd.io/_uploads/Bk1ashWexg.jpg" alt="Pagination_00"></p>
+<h2 id="一、官網資源"><a href="#一、官網資源" class="headerlink" title="一、官網資源"></a>一、官網資源</h2><p>pagination 官網：<a target="_blank" rel="noopener" href="https://pagination.js.org/docs/index.html">https://pagination.js.org/docs/index.html</a><br>可由此處下載 css 原始檔客製 <a target="_blank" rel="noopener" href="https://pagination.js.org/docs/index.html#Theme">https://pagination.js.org/docs/index.html#Theme</a></p>
+<h2 id="二、CDN-安裝"><a href="#二、CDN-安裝" class="headerlink" title="二、CDN 安裝"></a>二、CDN 安裝</h2><p>頁碼 pagination.scss（非必要引入，也可以從官網下載原始檔更改）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>jQuery Import（使用 slim.min.js 版本會出錯）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;https://code.jquery.com/jquery-3.7.0.min.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>頁碼 pagination.js</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Bootstrap 5 CSS（建立表格用，非必要）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、使用範例"><a href="#三、使用範例" class="headerlink" title="三、使用範例"></a>三、使用範例</h2><p><a target="_blank" rel="noopener" href="https://codepen.io/annchou_illu/pen/oNmZxmd">https://codepen.io/annchou_illu&#x2F;pen&#x2F;oNmZxmd</a><br>以下以政府 API 做為資料來源，搭配 Bootstrap 5 切版</p>
+<h3 id="3-1-目標功能"><a href="#3-1-目標功能" class="headerlink" title="3-1. 目標功能"></a>3-1. 目標功能</h3><ul>
+<li>頁碼與資料渲染</li>
+<li>簡單篩選功能</li>
+<li>點選至多 3 筆資料</li>
+</ul>
+<h3 id="3-2-示範步驟"><a href="#3-2-示範步驟" class="headerlink" title="3-2. 示範步驟"></a>3-2. 示範步驟</h3><ul>
+<li>規劃版位</li>
+<li>變數、原始資料宣告、按鈕綁定</li>
+<li>撰寫初始化渲染函式 renderData<br>。原始資料請求<br>。篩選資料生成<br>。頁碼生成</li>
+<li>拆解元件</li>
+<li>加入點選物件功能</li>
+</ul>
+<h3 id="3-3-實作開始"><a href="#3-3-實作開始" class="headerlink" title="3-3. 實作開始"></a>3-3. 實作開始</h3><h4 id="規劃版位-html"><a href="#規劃版位-html" class="headerlink" title="規劃版位 html"></a>規劃版位 <code>html</code></h4><p>最主要是先建立好渲染資料和頁碼生成位置，完整 html 可見 <a target="_blank" rel="noopener" href="https://codepen.io/annchou_illu/pen/oNmZxmd">codepen</a>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 被點選物件顯示區 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;bg-light&quot;</span>&gt;</span>你選擇的專案 seq：<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;showCheckedList&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 篩選按鈕區 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;d-flex justify-content-end gap-1 mb-3&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">class</span>=<span class="string">&quot;btn btn-secondary btnFilter&quot;</span> <span class="attr">value</span>=<span class="string">&quot;全部&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">class</span>=<span class="string">&quot;btn btn-secondary btnFilter&quot;</span> <span class="attr">value</span>=<span class="string">&quot;前鎮區&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">class</span>=<span class="string">&quot;btn btn-secondary btnFilter&quot;</span> <span class="attr">value</span>=<span class="string">&quot;三民區&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 資料生成位置與內容模板 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;pagination-Container&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;list-group&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">&quot;list-group-item d-flex justify-content-between&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>專案名稱<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>專案區域<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">&quot;form-check-input&quot;</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">id</span>=<span class="string">&quot;checkProject&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 頁碼 --&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;pagination-Pages&quot;</span> <span class="attr">class</span>=<span class="string">&quot;d-flex justify-content-end mt-3&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="基本前置設定"><a href="#基本前置設定" class="headerlink" title="基本前置設定"></a>基本前置設定</h4><p>於 JavaScript 準備 API 路徑來源宣告，以及將 DOM 元素綁定監聽。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _url =</span><br><span class="line">  <span class="string">&#x27;https://api.kcg.gov.tw:443/api/service/Get/1f2a6afe-f953-436f-981c-92f2739b3475&#x27;</span></span><br><span class="line"><span class="comment">// 顯示選取專案</span></span><br><span class="line"><span class="keyword">const</span> showCheckedList = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.showCheckedList&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> checkedProjectList = [] <span class="comment">// 被選取清單</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始篩選分類</span></span><br><span class="line"><span class="keyword">let</span> selectedFilter = <span class="string">&#x27;全部&#x27;</span></span><br><span class="line"><span class="comment">// 按鈕篩選處理</span></span><br><span class="line"><span class="keyword">const</span> btnFilter = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.btnFilter&#x27;</span>)</span><br><span class="line"><span class="comment">// 按鈕監聽</span></span><br><span class="line">btnFilter.<span class="title function_">forEach</span>(<span class="function">(<span class="params">btn</span>) =&gt;</span> &#123;</span><br><span class="line">  btn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    selectedFilter = btn.<span class="property">value</span> <span class="comment">// 當按鈕按下，selectedFilter 的值會被改變</span></span><br><span class="line">    <span class="title function_">renderData</span>() <span class="comment">// 每次被按下都會一再觸發 renderData()</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="了解-Pagination-js-和-jQuery-文件。"><a href="#了解-Pagination-js-和-jQuery-文件。" class="headerlink" title="了解 Pagination.js 和 jQuery 文件。"></a>了解 Pagination.js 和 jQuery 文件。</h4><ul>
+<li>Pagination.js Asynchronous or JSONP：<a target="_blank" rel="noopener" href="https://pagination.js.org/index.html">https://pagination.js.org/index.html</a></li>
+<li>Pagination.js ajax：<a target="_blank" rel="noopener" href="https://pagination.js.org/docs/index.html#ajaxFunction">https://pagination.js.org/docs/index.html#ajaxFunction</a></li>
+<li>jQuery ajax：<a target="_blank" rel="noopener" href="https://api.jquery.com/jquery.ajax/">https://api.jquery.com/jquery.ajax/</a></li>
+</ul>
+<p>Pagintaion.js docs&#x2F;commenlyused 第三項提到 ajax 的請求格式如下。並且套件支援以 jQuery ajax 操作 API 來源資料，如果請求成功則使用 <code>success</code> 接收並繼續執行，請求失敗則跳到 <code>error</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dataSource</span>: <span class="keyword">function</span>(<span class="params">done</span>)&#123;</span><br><span class="line">    $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;GET&#x27;</span>,</span><br><span class="line">        <span class="attr">url</span>: <span class="string">&#x27;/test.json&#x27;</span>,</span><br><span class="line">        <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params">response</span>)&#123;</span><br><span class="line">            <span class="title function_">done</span>(response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="建立初始化-function-renderData-基本架構"><a href="#建立初始化-function-renderData-基本架構" class="headerlink" title="建立初始化 function renderData 基本架構"></a>建立初始化 <code>function renderData</code> 基本架構</h4><p>這時就可以組合出大概的渲染函式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">renderData</span>(<span class="params"></span>) &#123;</span><br><span class="line">  $(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    (<span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">      <span class="keyword">let</span> container = $(<span class="string">&quot;#pagination-&quot;</span> + name); <span class="comment">// 這裡面包裝了套件所需設定，暫時不用理會</span></span><br><span class="line">      $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: _url, <span class="comment">// 資料來源 API 網址</span></span><br><span class="line">        <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">        ...  <span class="comment">// 請求成功後執行</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">error</span>: <span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">error</span>(error); <span class="comment">// 請求失敗時執行</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;)(<span class="string">&quot;Pages&quot;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">renderData</span>(); <span class="comment">// 一啟動網頁就運行</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="儲存-API-請求回傳的原始資料"><a href="#儲存-API-請求回傳的原始資料" class="headerlink" title="儲存 API 請求回傳的原始資料"></a>儲存 API 請求回傳的原始資料</h4><p>使用 <code>console</code> 測試，發現我們需要撈回的資料被放在 <code>data</code> 中的 <code>data</code> 屬性，所以 <code>data.data</code> 是我們所需要的，所以宣告一個變數儲存它。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">   <span class="keyword">const</span> allData = data.<span class="property">data</span>​  <span class="comment">//宣告一個 allData 變數來存放 API 回傳的全部資料</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<h4 id="撰寫篩選按鈕動作"><a href="#撰寫篩選按鈕動作" class="headerlink" title="撰寫篩選按鈕動作"></a>撰寫篩選按鈕動作</h4><p>因為我們在 html 中寫了三個按鈕，讓它可以做區域篩選，並且上面已經先宣告了變數 <code>selectedFilter</code>，預設值為「全部」。當 <code>selectedFilter</code> 變數的值已經不是「全部」，則將 <code>filteredData</code> 重新賦值成符合篩選條件的資料。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> filteredData = [] <span class="comment">// 真正要被渲染的已篩選資料</span></span><br><span class="line">selectedFilter !== <span class="string">&#x27;全部&#x27;</span> <span class="comment">// 我們在步驟 2 時宣告過全域，並設定初始值為&quot;全部&quot;</span></span><br><span class="line">  ? (filteredData = allData.<span class="title function_">filter</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="property">name</span> === selectedFilter))</span><br><span class="line">  : (filteredData = allData)</span><br></pre></td></tr></table></figure>
+
+<h4 id="將按鈕加入點擊監聽"><a href="#將按鈕加入點擊監聽" class="headerlink" title="將按鈕加入點擊監聽"></a>將按鈕加入點擊監聽</h4><p>測試上述的 <code>selectedFilter</code> 有沒有因點擊而更改。因為每次點擊按鈕都要重新利用 <code>renderData</code> 函式處理，所以我們在執行函式中再度呼叫 <code>renderData</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">btnFilter.<span class="title function_">forEach</span>(<span class="function">(<span class="params">btn</span>) =&gt;</span> &#123;</span><br><span class="line">  btn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    selectedFilter = btn.<span class="property">value</span></span><br><span class="line">    <span class="title function_">renderData</span>()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>目前我們的 <code>renderData</code> 函式全部是以下狀態，並且加入 <code>console</code> 測試 <code>selectedFilter</code> 和 <code>filteredData</code> 值是否有跟著按鈕一起改變。確定成功就可以將 <code>console</code> 刪除。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">renderData</span>(<span class="params"></span>) &#123;</span><br><span class="line">  $(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    (<span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">      <span class="keyword">let</span> container = $(<span class="string">&quot;#pagination-&quot;</span> + name); <span class="comment">// 這裡面包裝了套件所需設定，暫時不用理會</span></span><br><span class="line">      $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: _url, <span class="comment">// 資料來源 API 網址</span></span><br><span class="line">        <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">          <span class="keyword">const</span> allData = data.<span class="property">data</span>​ <span class="comment">// 宣告一個 allData 變數來存放 API 回傳的全部資料</span></span><br><span class="line"></span><br><span class="line">          <span class="keyword">let</span> filteredData = []; <span class="comment">// 真正要被渲染的已篩選資料</span></span><br><span class="line">          selectedFilter !== <span class="string">&quot;全部&quot;</span></span><br><span class="line">    ? (filteredData = allData.<span class="title function_">filter</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="property">name</span> === selectedFilter))</span><br><span class="line">    : (filteredData = allData);</span><br><span class="line"></span><br><span class="line">    			  <span class="variable language_">console</span>.<span class="title function_">log</span>(selectedFilter)</span><br><span class="line">    			  <span class="variable language_">console</span>.<span class="title function_">log</span>(filteredData)</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">error</span>: <span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">error</span>(error); <span class="comment">// 請求失敗時執行</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;)(<span class="string">&quot;Pages&quot;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="計算頁碼與設定"><a href="#計算頁碼與設定" class="headerlink" title="計算頁碼與設定"></a>計算頁碼與設定</h4><p>接著用篩選後的資料計算可以生成幾頁頁碼，以下程式碼可以接在剛才 <code>filteredData console</code> 的下面。回到套件 <a target="_blank" rel="noopener" href="https://pagination.js.org/docs/index.html#Methods">docs&#x2F;methods</a>，發現我們可以透過 <code>container.pagination(&#123; ... &#125;)</code> 設定套件呈現細節。以下屬性詳細請參照官網文件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">container.<span class="title function_">pagination</span>(&#123;</span><br><span class="line">  <span class="attr">dataSource</span>: filteredData, <span class="comment">//我們剛才建立的實際渲染資料</span></span><br><span class="line">  <span class="comment">//locator: &quot;data&quot;, // 資料來源中的屬性，因為上面使用的 filterData 已經是處理過的資料，所以可忽略設定</span></span><br><span class="line">  <span class="attr">totalNumber</span>: filteredData.<span class="property">length</span>, <span class="comment">//實際資料總數</span></span><br><span class="line">  <span class="attr">pageSize</span>: <span class="number">5</span>, <span class="comment">//每頁資料數</span></span><br><span class="line">  <span class="attr">showPageNumbers</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">showPrevious</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">showNext</span>: <span class="literal">true</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="渲染頁碼與資料"><a href="#渲染頁碼與資料" class="headerlink" title="渲染頁碼與資料"></a>渲染頁碼與資料</h4><p>回到官網文件 <a target="_blank" rel="noopener" href="https://pagination.js.org/docs/index.html#dataSource">docs&#x2F;dataSources</a>，<code>container</code> 中的 <code>callback</code> 屬性可用於插入自訂的 html，所以我們可以將上面 html 要渲染的資料 html 模板貼下來。<code>input</code> 中的各項屬性視原始資料內容加上獨特值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">container.<span class="title function_">pagination</span>(&#123;</span><br><span class="line">  <span class="comment">//...略</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//頁碼渲染與監聽</span></span><br><span class="line">  <span class="attr">callback</span>: <span class="keyword">function</span> (<span class="params">res, pagination</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> dataHtml = <span class="string">&#x27;&lt;ul class=&quot;list-group&quot;&gt;&#x27;</span></span><br><span class="line"></span><br><span class="line">    $.<span class="title function_">each</span>(res, <span class="keyword">function</span> (<span class="params">index, item</span>) &#123;</span><br><span class="line">      dataHtml += <span class="string">`&lt;li class=&quot;list-group-item d-flex justify-content-between&quot;&gt;</span></span><br><span class="line"><span class="string">	         &lt;div&gt;</span></span><br><span class="line"><span class="string">	         	&lt;p&gt;<span class="subst">$&#123;item.projectName&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">	         	&lt;p&gt;<span class="subst">$&#123;item.name&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">	         &lt;/div&gt;	         </span></span><br><span class="line"><span class="string">         &lt;/li&gt;`</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    dataHtml += <span class="string">&#x27;&lt;/ul&gt;&#x27;</span></span><br><span class="line">    $(<span class="string">&#x27;#pagination-Container&#x27;</span>).<span class="title function_">html</span>(dataHtml) <span class="comment">// 設定 HTML 內容到 container​</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>最後補上執行 <code>renderData</code>，讓網頁一開啟就運行。就完成目標功能的第一二項，已經可以作頁碼切換與按鈕篩選資料了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">renderData</span>(<span class="params"></span>)&#123;...略&#125;​</span><br><span class="line"></span><br><span class="line"><span class="title function_">renderData</span>();</span><br></pre></td></tr></table></figure>
+
+<h4 id="拆元件"><a href="#拆元件" class="headerlink" title="拆元件"></a>拆元件</h4><p>因為目前 <code>function renderData</code> 內的程式碼冗長，所以先來做拆分整理。我們剛才在 <code>function renderData</code> 內的程式碼大致可以分為</p>
+<ul>
+<li>基礎架構</li>
+<li>資料依據按鈕篩選：需要輸入資料 <code>allData</code>，並生成 <code>filteredData</code>。</li>
+<li>將篩選過的資料計算頁碼：需要輸入這兩筆資料 <code>filteredData</code>、<code>container</code>。</li>
+<li>渲染頁碼與資料：需要輸入資料 <code>res</code>。<br>依據以上分類可以拆成四個函式</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基礎架構</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">renderData</span>(<span class="params"></span>) &#123;</span><br><span class="line">  $(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    ;(<span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">      <span class="keyword">let</span> container = $(<span class="string">&#x27;#pagination-&#x27;</span> + name)</span><br><span class="line">      $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: _url,</span><br><span class="line">        <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">          <span class="comment">// 將完整資料交給 handleFilterData 函式篩選</span></span><br><span class="line">          <span class="keyword">const</span> allData = data.<span class="property">data</span></span><br><span class="line">          <span class="keyword">const</span> filteredData = <span class="title function_">filterData</span>(allData)</span><br><span class="line">          <span class="comment">// 將返回的 filteredData 計算頁碼</span></span><br><span class="line">          <span class="title function_">handlePagination</span>(filteredData, container)</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">error</span>: <span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">error</span>(error)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)(<span class="string">&#x27;Pages&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 資料依據按鈕篩選：需要輸入資料 allData，並生成 filteredData。​</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">filterData</span>(<span class="params">data</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> filteredData = []</span><br><span class="line">  selectedFilter !== <span class="string">&#x27;全部&#x27;</span></span><br><span class="line">    ? (filteredData = data.<span class="title function_">filter</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="property">name</span> === selectedFilter))</span><br><span class="line">    : (filteredData = data)</span><br><span class="line">  <span class="keyword">return</span> filteredData</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//使用篩選資料，計算頁碼</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">handlePagination</span>(<span class="params">filteredData, container</span>) &#123;</span><br><span class="line">  container.<span class="title function_">pagination</span>(&#123;</span><br><span class="line">    <span class="attr">dataSource</span>: filteredData, <span class="comment">// 實際資料來源</span></span><br><span class="line">    <span class="comment">//locator: &quot;data&quot;, // 資料來源中的屬性，因為上面使用的 filterData 已經是處理過的資料，所以可忽略設定</span></span><br><span class="line">    <span class="attr">totalNumber</span>: filteredData.<span class="property">length</span>, <span class="comment">// 實際資料總數</span></span><br><span class="line">    <span class="attr">pageSize</span>: <span class="number">5</span>, <span class="comment">// 每頁資料數</span></span><br><span class="line">    <span class="attr">showPageNumbers</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">showPrevious</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">showNext</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 頁碼渲染與監聽</span></span><br><span class="line">    <span class="attr">callback</span>: <span class="keyword">function</span> (<span class="params">res, pagination</span>) &#123;</span><br><span class="line">      <span class="comment">//渲染頁碼與資料</span></span><br><span class="line">      <span class="title function_">renderPagination</span>(res)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 渲染頁碼與資料</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">renderPagination</span>(<span class="params">res</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> dataHtml = <span class="string">&#x27;&lt;ul class=&quot;list-group&quot;&gt;&#x27;</span></span><br><span class="line">  $.<span class="title function_">each</span>(res, <span class="keyword">function</span> (<span class="params">index, item</span>) &#123;</span><br><span class="line">    dataHtml += <span class="string">`&lt;li class=&quot;list-group-item d-flex justify-content-between&quot;&gt;</span></span><br><span class="line"><span class="string">    	         &lt;div&gt;</span></span><br><span class="line"><span class="string">	         				&lt;p&gt;<span class="subst">$&#123;item.projectName&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">	         				&lt;p&gt;<span class="subst">$&#123;item.name&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">	         		&lt;/div&gt;</span></span><br><span class="line"><span class="string">	         		&lt;/li&gt;`</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  dataHtml += <span class="string">&#x27;&lt;/ul&gt;&#x27;</span></span><br><span class="line">  $(<span class="string">&#x27;#pagination-Container&#x27;</span>).<span class="title function_">html</span>(dataHtml) <span class="comment">// 設定 HTML 內容到 container</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="加入點選功能的-checkbox"><a href="#加入點選功能的-checkbox" class="headerlink" title="加入點選功能的 checkbox"></a>加入點選功能的 <code>checkbox</code></h4><p>先從渲染 <code>checkbox</code> 開始，修改剛才建立好的 <code>function renderPagination</code> 中的 <code>dataHtml</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">each</span>(res, <span class="keyword">function</span> (<span class="params">index, item</span>) &#123;</span><br><span class="line">  dataHtml += <span class="string">`&lt;li class=&quot;list-group-item d-flex justify-content-between&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;div&gt;</span></span><br><span class="line"><span class="string">    		&lt;p&gt;<span class="subst">$&#123;item.projectName&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">   			&lt;p&gt;<span class="subst">$&#123;item.name&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;input class=&quot;form-check-input&quot; type=&quot;checkbox&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;/li&gt;`</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="為-checkbox-加入辨識值"><a href="#為-checkbox-加入辨識值" class="headerlink" title="為 checkbox 加入辨識值"></a>為 <code>checkbox</code> 加入辨識值</h4><p>每一個 <code>checkbox</code> 都需要被辨識，觀察 <code>$.each(res, function (index, item)</code> 中的 <code>item</code> 可以發現 <code>item.projectSEQ</code> 這個唯一值可以被使用，所以我們可藉由 <code>data-*（MDN）</code> 的方式加入此值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">each</span>(res, <span class="keyword">function</span> (<span class="params">index, item</span>) &#123;</span><br><span class="line">  dataHtml += <span class="string">`&lt;li class=&quot;list-group-item d-flex justify-content-between&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;div&gt;</span></span><br><span class="line"><span class="string">    		&lt;p&gt;<span class="subst">$&#123;item.projectName&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">   			&lt;p&gt;<span class="subst">$&#123;item.name&#125;</span>&lt;/p&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;input class=&quot;form-check-input&quot; type=&quot;checkbox&quot;</span></span><br><span class="line"><span class="string">    		id=&quot;checkProject<span class="subst">$&#123;item.projectSEQ&#125;</span>&quot;</span></span><br><span class="line"><span class="string">    		data-seq=<span class="subst">$&#123;item.projectSEQ&#125;</span>&gt;        //這裡加入 data-seq</span></span><br><span class="line"><span class="string">    &lt;/li&gt;`</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="儲存被點選的-checkbox"><a href="#儲存被點選的-checkbox" class="headerlink" title="儲存被點選的 checkbox"></a>儲存被點選的 <code>checkbox</code></h4><p>完成以上步驟後，我們已經可以點選 <code>checkbox</code>，也可以換頁。但如果回到上一頁，會發現剛才點選的 <code>checkbox</code> 狀態因為換頁資料重新渲染，導致失去被點選狀態。因此我們要紀錄有哪些 <code>checkbox</code> 被點選過，之後才能在渲染時判定每個 <code>checkbox</code> 該呈現什麼狀態。<br>步驟 2 中，我們有宣告一個 <code>checkedProjectList</code> 變數用來儲存被點選的 <code>checkbox</code> 清單。現在我們建立一個函式來將資料寫入變數中。判讀被點選的 <code>checkbox data-seq</code>，將 <code>seq</code> 存入。讀取 <code>data-*</code> 的方法使用 <code>checkbox.getAttribute(&quot;data-seq&quot;)</code>，或 <code>checkbox.dataset.seq</code> 都可以。<br>另外特別注意的是，我們從 API 取得回來的 <code>projectSEQ</code> 參數是 <code>number</code> 型別，所以我們在這裡存入 <code>checkedProjectList</code> 變數的值也必須轉成 <code>number</code> 型別才不會之後影響判斷。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">handleCheckProject</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="comment">// 將所有 checkbox 綁定</span></span><br><span class="line">  <span class="keyword">const</span> checkBoxes = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;input[type=&#x27;checkbox&#x27;]&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 因為 checkBoxes 有多個 checkbox，所以必須先使用 forEach 才能 addEventListener 監聽</span></span><br><span class="line">  checkBoxes.<span class="title function_">forEach</span>(<span class="function"><span class="params">checkbox</span> =&gt;</span> &#123;</span><br><span class="line">    checkbox.<span class="title function_">addEventListener</span>(<span class="string">&quot;change&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> projectSeq = checkbox.<span class="title function_">getAttribute</span>(<span class="string">&quot;data-seq&quot;</span>);</span><br><span class="line">      checkedProjectList.<span class="title function_">push</span>(+projectSeq)  <span class="comment">// 使用「+」轉 number</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">//因為步驟 2 中已經有做 DOM 綁定，所以在這裡將儲存的資料渲染</span></span><br><span class="line">      showCheckedList.<span class="property">textContent</span> = checkedProjectList.<span class="title function_">join</span>(<span class="string">&quot;、&quot;</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;​</span><br></pre></td></tr></table></figure>
+
+<p>回到 function handlePagination 函式，在 callback 處加入 handleCheckProject()，讓它能夠執行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">handlePagination</span>(<span class="params">filteredData, container</span>)&#123;</span><br><span class="line">	...略</span><br><span class="line"></span><br><span class="line">	<span class="attr">callback</span>: <span class="keyword">function</span> (<span class="params">res, pagination</span>) &#123;</span><br><span class="line">      ...略</span><br><span class="line"></span><br><span class="line">      <span class="comment">//處理 checkbox 選擇專案</span></span><br><span class="line">      <span class="title function_">handleCheckProject</span>();</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hackmd.io/_uploads/Sk1ashblge.jpg" alt="Pagination_01"></p>
+<h4 id="加入判斷當前-checkbox-是否已被點選，生成樣板"><a href="#加入判斷當前-checkbox-是否已被點選，生成樣板" class="headerlink" title="加入判斷當前 checkbox 是否已被點選，生成樣板"></a>加入判斷當前 <code>checkbox</code> 是否已被點選，生成樣板</h4><p>回到 <code>function renderPagination</code> 函式，在進入 <code>each</code> 之後，執行當前 <code>item.projectSEQ</code> 值是否存在於 <code>checkedProjectList</code> 變數中。<code>includes</code> 會返回 <code>true/false</code>（<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Reference/Global_attributes/data-*">MDN</a>）。<br><code>checkbox</code> （<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Reference/Elements/input/checkbox">MDN</a>）文件中提到如果是被勾選狀態，則會被加入 <code>checked</code> 在 HTML 中標示，所以也在 <code>dataHTML</code> 中使用三元運算子根據剛才 <code>isChecked</code> 的結果判斷是否加入 <code>checked</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">renderPagination</span>(<span class="params">res</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> dataHtml = <span class="string">&#x27;&lt;ul class=&quot;list-group&quot;&gt;&#x27;</span></span><br><span class="line">  $.<span class="title function_">each</span>(res, <span class="keyword">function</span> (<span class="params">index, item</span>) &#123;</span><br><span class="line">    <span class="comment">// 是否已經被選取</span></span><br><span class="line">    <span class="keyword">const</span> isChecked = checkedProjectList.<span class="title function_">includes</span>(item.<span class="property">projectSEQ</span>)</span><br><span class="line"></span><br><span class="line">    dataHtml += <span class="string">`&lt;li class=&quot;list-group-item d-flex justify-content-between&quot;&gt;&lt;div&gt;&lt;p&gt;<span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">      item.projectName</span></span></span><br><span class="line"><span class="subst"><span class="string">    &#125;</span>&lt;/p&gt;&lt;p&gt;<span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">      item.name</span></span></span><br><span class="line"><span class="subst"><span class="string">    &#125;</span>&lt;/p&gt;&lt;/div&gt;&lt;input class=&quot;form-check-input&quot; type=&quot;checkbox&quot; id=&quot;checkProject<span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">      item.projectSEQ</span></span></span><br><span class="line"><span class="subst"><span class="string">    &#125;</span>&quot; data-seq=<span class="subst">$&#123;item.projectSEQ&#125;</span></span></span><br><span class="line"><span class="string">    <span class="subst">$&#123;isChecked ? <span class="string">&#x27;checked&#x27;</span> : <span class="string">&#x27;&#x27;</span>&#125;</span>&gt;  // 三元運算子判斷當前 checkbox 狀態</span></span><br><span class="line"><span class="string">    &lt;/li&gt;`</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  dataHtml += <span class="string">&#x27;&lt;/ul&gt;&#x27;</span></span><br><span class="line">  $(<span class="string">&#x27;#pagination-Container&#x27;</span>).<span class="title function_">html</span>(dataHtml) <span class="comment">// 設定 HTML 內容到 container</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完成後的資料表即使換頁再回上一頁，也能繼續顯示相同 <code>checkbox</code> 勾選狀態了。但還有一些小錯誤，即使 <code>checkbox</code> 取消，或是再次點選都會不斷累積相同 <code>seq</code> 編號在 <code>checkedProjectList</code> 變數中。</p>
+<h4 id="限制選取資料數量"><a href="#限制選取資料數量" class="headerlink" title="限制選取資料數量"></a>限制選取資料數量</h4><p>我們要解決上述的 bug 以及完成最後一個任務：限制最多只能選取 3 筆資料。回到 <code>function handleCheckProject</code>，我們要在這裡根據 <code>checkedProjectList</code> 變數內的資料數量判斷是否還能再繼續點選動作。</p>
+<p>■ 我們可能有幾種情境及對應執行：<br>（1）已達最多選取數 → 禁止用戶點選，但因為 <code>checkbox</code> 沒有 <code>disable</code> 屬性，所以我們只能讓 <code>checked</code> 強制取消<br>（2）未達最多選取數 → 加入清單<br>（3）清單中已有目前點選的 <code>seq</code> 編號 → 判斷為取消點選，從清單中移除<br>（4）清單中沒有目前的 <code>seq</code> 編號 → 加入清單<br>■ 綜合以上情境狀況，我們把要情境總結成<br>（1）已達最多選取數，並且清單中不存在此 <code>seq</code> → 取消當前 <code>checkbox</code> 勾選狀態<br>（2）未達最多選取數 → 根據清單是否存在 <code>seq</code>，執行加入清單或刪除該值的動作 ​，<br>以上不管是判斷清單中是否存在當前 seq，或是執行刪除，都會需要知道該 <code>seq</code> 在清單中的位置，所以可以使用 <code>indexOf</code> 尋找。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">handleCheckProject</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> checkBoxes = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;input[type=&#x27;checkbox&#x27;]&quot;</span>)</span><br><span class="line">  <span class="keyword">const</span> maxChecked = <span class="number">3</span> <span class="comment">// 最多選取數</span></span><br><span class="line"></span><br><span class="line">  checkBoxes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">checkbox</span>) =&gt;</span> &#123;</span><br><span class="line">    checkbox.<span class="title function_">addEventListener</span>(<span class="string">&#x27;change&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> projectSeq = checkbox.<span class="title function_">getAttribute</span>(<span class="string">&#x27;data-seq&#x27;</span>)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 判斷目前的 seq 在 checkedProjectList 中的 index，若無則返回 -1</span></span><br><span class="line">      <span class="keyword">const</span> findCheckBoxIndex = checkedProjectList.<span class="title function_">indexOf</span>(+projectSeq)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果已達最多選取數，並且清單中不存在此 seq</span></span><br><span class="line">      <span class="keyword">if</span> (</span><br><span class="line">        checkedProjectList.<span class="property">length</span> === maxChecked &amp;&amp;</span><br><span class="line">        findCheckBoxIndex === -<span class="number">1</span></span><br><span class="line">      ) &#123;</span><br><span class="line">        checkbox.<span class="property">checked</span> = <span class="literal">false</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 未達最多選取數​</span></span><br><span class="line">        findCheckBoxIndex === -<span class="number">1</span></span><br><span class="line">          ? checkedProjectList.<span class="title function_">push</span>(+projectSeq)</span><br><span class="line">          : checkedProjectList.<span class="title function_">splice</span>(findCheckBoxIndex, <span class="number">1</span>)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">//渲染選取專案</span></span><br><span class="line">      showCheckedList.<span class="property">textContent</span> = checkedProjectList.<span class="title function_">join</span>(<span class="string">&#x27;、&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完成！</p>
+<h2 id="四、結尾"><a href="#四、結尾" class="headerlink" title="四、結尾"></a>四、結尾</h2><p>這是我原本發布在六角學院 2023 JS 直播班討論區分享的心得，現移植到部落格存放，謝謝 Paul 提供了改寫優化。</p>
+<h2 id="五、資料參考"><a href="#五、資料參考" class="headerlink" title="五、資料參考"></a>五、資料參考</h2><p>Paul 版本 codepen：<a target="_blank" rel="noopener" href="https://codepen.io/paul-1997/pen/xxMqowP">https://codepen.io/paul-1997/pen/xxMqowP</a></p>
+<p>本文原發表於 <a target="_blank" rel="noopener" href="https://vocus.cc/article/659f8d2efd8978000178ec77">Vocus</a>，此篇為個人 blog 備份。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Front-End/" rel="tag"># 前端</a>
+              <a href="/tags/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/" rel="tag"># 套件筆記</a>
+              <a href="/tags/%E9%A0%81%E7%A2%BC/" rel="tag"># 頁碼</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/2621172458/" rel="prev" title="【套件筆記 - Vue】輪播 Swiper.js">
+      <i class="fa fa-chevron-left"></i> 【套件筆記 - Vue】輪播 Swiper.js
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%98%E7%B6%B2%E8%B3%87%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">一、官網資源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81CDN-%E5%AE%89%E8%A3%9D"><span class="nav-number">2.</span> <span class="nav-text">二、CDN 安裝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8%E7%AF%84%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">三、使用範例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E7%9B%AE%E6%A8%99%E5%8A%9F%E8%83%BD"><span class="nav-number">3.1.</span> <span class="nav-text">3-1. 目標功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%A4%BA%E7%AF%84%E6%AD%A5%E9%A9%9F"><span class="nav-number">3.2.</span> <span class="nav-text">3-2. 示範步驟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%AF%A6%E4%BD%9C%E9%96%8B%E5%A7%8B"><span class="nav-number">3.3.</span> <span class="nav-text">3-3. 實作開始</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A6%8F%E5%8A%83%E7%89%88%E4%BD%8D-html"><span class="nav-number">3.3.1.</span> <span class="nav-text">規劃版位 html</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%89%8D%E7%BD%AE%E8%A8%AD%E5%AE%9A"><span class="nav-number">3.3.2.</span> <span class="nav-text">基本前置設定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3-Pagination-js-%E5%92%8C-jQuery-%E6%96%87%E4%BB%B6%E3%80%82"><span class="nav-number">3.3.3.</span> <span class="nav-text">了解 Pagination.js 和 jQuery 文件。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%88%9D%E5%A7%8B%E5%8C%96-function-renderData-%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%A7%8B"><span class="nav-number">3.3.4.</span> <span class="nav-text">建立初始化 function renderData 基本架構</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%84%B2%E5%AD%98-API-%E8%AB%8B%E6%B1%82%E5%9B%9E%E5%82%B3%E7%9A%84%E5%8E%9F%E5%A7%8B%E8%B3%87%E6%96%99"><span class="nav-number">3.3.5.</span> <span class="nav-text">儲存 API 請求回傳的原始資料</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%92%B0%E5%AF%AB%E7%AF%A9%E9%81%B8%E6%8C%89%E9%88%95%E5%8B%95%E4%BD%9C"><span class="nav-number">3.3.6.</span> <span class="nav-text">撰寫篩選按鈕動作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%87%E6%8C%89%E9%88%95%E5%8A%A0%E5%85%A5%E9%BB%9E%E6%93%8A%E7%9B%A3%E8%81%BD"><span class="nav-number">3.3.7.</span> <span class="nav-text">將按鈕加入點擊監聽</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A8%88%E7%AE%97%E9%A0%81%E7%A2%BC%E8%88%87%E8%A8%AD%E5%AE%9A"><span class="nav-number">3.3.8.</span> <span class="nav-text">計算頁碼與設定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%B2%E6%9F%93%E9%A0%81%E7%A2%BC%E8%88%87%E8%B3%87%E6%96%99"><span class="nav-number">3.3.9.</span> <span class="nav-text">渲染頁碼與資料</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%86%E5%85%83%E4%BB%B6"><span class="nav-number">3.3.10.</span> <span class="nav-text">拆元件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E9%BB%9E%E9%81%B8%E5%8A%9F%E8%83%BD%E7%9A%84-checkbox"><span class="nav-number">3.3.11.</span> <span class="nav-text">加入點選功能的 checkbox</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%BA-checkbox-%E5%8A%A0%E5%85%A5%E8%BE%A8%E8%AD%98%E5%80%BC"><span class="nav-number">3.3.12.</span> <span class="nav-text">為 checkbox 加入辨識值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%84%B2%E5%AD%98%E8%A2%AB%E9%BB%9E%E9%81%B8%E7%9A%84-checkbox"><span class="nav-number">3.3.13.</span> <span class="nav-text">儲存被點選的 checkbox</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E5%88%A4%E6%96%B7%E7%95%B6%E5%89%8D-checkbox-%E6%98%AF%E5%90%A6%E5%B7%B2%E8%A2%AB%E9%BB%9E%E9%81%B8%EF%BC%8C%E7%94%9F%E6%88%90%E6%A8%A3%E6%9D%BF"><span class="nav-number">3.3.14.</span> <span class="nav-text">加入判斷當前 checkbox 是否已被點選，生成樣板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%99%90%E5%88%B6%E9%81%B8%E5%8F%96%E8%B3%87%E6%96%99%E6%95%B8%E9%87%8F"><span class="nav-number">3.3.15.</span> <span class="nav-text">限制選取資料數量</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%B5%90%E5%B0%BE"><span class="nav-number">4.</span> <span class="nav-text">四、結尾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%B3%87%E6%96%99%E5%8F%83%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">五、資料參考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ann Chou</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ann Chou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

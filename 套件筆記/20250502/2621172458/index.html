@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"annchoucode.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Swiper.js 是一個功能齊全的輪播套件，除了輪播外，也可以客製化導航按鈕和頁碼等細項。目前支持 JS、React、Vue。我的 Vue3 專題中也有使用這套套件呈現，但因為 Swiper.js Vue 版是由 Composition API 寫成，但我當時只會 Options API，花了很多時間了解撰寫方式。今天目標就是介紹 Swiper.js 在 Vue3 Options API 的用法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【套件筆記 - Vue】輪播 Swiper.js">
+<meta property="og:url" content="https://annchoucode.github.io/AnnChouCode.github.io/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/2621172458/index.html">
+<meta property="og:site_name" content="Ann Chou Coding">
+<meta property="og:description" content="Swiper.js 是一個功能齊全的輪播套件，除了輪播外，也可以客製化導航按鈕和頁碼等細項。目前支持 JS、React、Vue。我的 Vue3 專題中也有使用這套套件呈現，但因為 Swiper.js Vue 版是由 Composition API 寫成，但我當時只會 Options API，花了很多時間了解撰寫方式。今天目標就是介紹 Swiper.js 在 Vue3 Options API 的用法">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://hackmd.io/_uploads/ryAYmhZegl.png">
+<meta property="og:image" content="https://hackmd.io/_uploads/rk0YQhWege.png">
+<meta property="og:image" content="https://hackmd.io/_uploads/ByRtX2Wgxg.png">
+<meta property="og:image" content="https://hackmd.io/_uploads/HJgRKQ3Wxle.png">
+<meta property="og:image" content="https://hackmd.io/_uploads/rk0K73Zgll.png">
+<meta property="article:published_time" content="2025-05-02T03:50:57.000Z">
+<meta property="article:modified_time" content="2025-05-02T03:52:40.381Z">
+<meta property="article:author" content="Ann Chou">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="套件筆記">
+<meta property="article:tag" content="輪播">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hackmd.io/_uploads/ryAYmhZegl.png">
+
+<link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/2621172458/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>【套件筆記 - Vue】輪播 Swiper.js | Ann Chou Coding</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ann Chou Coding</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">19</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">10</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/2621172458/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ann Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ann Chou Coding">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【套件筆記 - Vue】輪播 Swiper.js
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-05-02 11:50:57 / 修改時間：11:52:40" itemprop="dateCreated datePublished" datetime="2025-05-02T11:50:57+08:00">2025-05-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/" itemprop="url" rel="index"><span itemprop="name">套件筆記</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Swiper.js 是一個功能齊全的輪播套件，除了輪播外，也可以客製化導航按鈕和頁碼等細項。目前支持 JS、React、Vue。我的 Vue3 專題中也有使用這套套件呈現，但因為 Swiper.js Vue 版是由 Composition API 寫成，但我當時只會 Options API，花了很多時間了解撰寫方式。今天目標就是介紹 <strong>Swiper.js 在 Vue3 Options API 的用法</strong>和元件化小撇步。<br><img src="https://hackmd.io/_uploads/ryAYmhZegl.png" alt="VueSwiper_00"></p>
+<h2 id="目標功能"><a href="#目標功能" class="headerlink" title="目標功能"></a>目標功能</h2><ul>
+<li>網頁每次顯示 3 則，768px 以下顯示 1 則</li>
+<li>輪播時以更新 1 則為單位</li>
+<li>可自動播放：Autoplay（自動播放）</li>
+<li>可使用頁碼操作：Pagination（頁碼）</li>
+<li>可使用導航切換上下頁：Navigation（上下一則導航）</li>
+<li>輪播至最後一筆，會自動同方向重複播放：Loop（迴圈）</li>
+<li>輪播元件可以重複使用，並秀出不同類別內容</li>
+</ul>
+<h2 id="一、官網資源-安裝"><a href="#一、官網資源-安裝" class="headerlink" title="一、官網資源&#x2F;安裝"></a>一、官網資源&#x2F;安裝</h2><p>Swiper 11：<a target="_blank" rel="noopener" href="https://swiperjs.com/demos">https://swiperjs.com/demos</a><br>Swiper 4-7 中文翻譯（非官方）：<a target="_blank" rel="noopener" href="https://www.swiper.com.cn/api/scrollbar/369.html">https://www.swiper.com.cn/api/scrollbar/369.html</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i swiper@10.3.1</span><br></pre></td></tr></table></figure>
+<p>是的沒錯~ 雖然現在 Swiper 版本已經是 11 了，但我的使用經驗是不管是否為同一個 swiper 元件，重複在同一個頁面使用沒有問題。但如果在不同頁面中使用，navigation（上&#x2F;下一張）的導航就會失效，只有降版沒有問題，可能跟 Swiper 後期版本是用 Composition api 來撰寫有關。我個人是習慣各版本文件搭配著看，雖然中文翻譯版已經很舊了，但是初學時的好利器。實作時也推薦大家先從 11 的 Demos 尋找範例開始，比較好入手。<br><img src="https://hackmd.io/_uploads/rk0YQhWege.png" alt="VueSwiper_01"></p>
+<h2 id="二、建立元件"><a href="#二、建立元件" class="headerlink" title="二、建立元件"></a>二、建立元件</h2><h3 id="1-引入方法"><a href="#1-引入方法" class="headerlink" title="1. 引入方法"></a>1. 引入方法</h3><p>建立元件文件 SwiperComponent.vue。<br>官網提到：By default Swiper Vue uses core version of Swiper (without any additional modules). If you want to use Navigation, Pagination and <a target="_blank" rel="noopener" href="https://swiperjs.com/swiper-api#custom-build">other modules</a>, you have to install them first.<br>所以像是 Autoplay（自動播放）、Pagination（頁碼）、Navigation（上下一則導航）都是要額外引入的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="comment">// import Swiper js</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Swiper</span>, <span class="title class_">SwiperSlide</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;swiper/vue&#x27;</span></span><br><span class="line"><span class="comment">// Swiper 8 這樣寫 ↓</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Autoplay</span>, <span class="title class_">Pagination</span>, <span class="title class_">Navigation</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;swiper&#x27;</span></span><br><span class="line"><span class="comment">// Swiper 10 這樣寫 ↓</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Navigation</span>, <span class="title class_">Pagination</span>, <span class="title class_">Autoplay</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;swiper/modules&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Import Swiper stylesimport &#x27;swiper/css&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;swiper/css/pagination&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;swiper/css/navigation&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</span><br><span class="line">	<span class="title function_">data</span> () &#123;</span><br><span class="line">		<span class="keyword">return</span> &#123;</span><br><span class="line">			<span class="attr">data</span>: ...​, <span class="comment">// 你要渲染的資料 </span></span><br><span class="line">			<span class="attr">modules</span>: [<span class="title class_">Autoplay</span>, <span class="title class_">Pagination</span>, <span class="title class_">Navigation</span>] <span class="comment">// 額外引入的 modules</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="attr">components</span>: &#123;</span><br><span class="line">		<span class="title class_">Swiper</span>,</span><br><span class="line">		<span class="title class_">SwiperSlide</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;​</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-撰寫-HTML"><a href="#2-撰寫-HTML" class="headerlink" title="2. 撰寫 HTML"></a>2. 撰寫 HTML</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// swiper 輪播主體，設置都要在 Swiper 標籤範圍內才會生效​</span></span><br><span class="line">&lt;<span class="title class_">Swiper</span></span><br><span class="line">	:slidesPerView=<span class="string">&quot;1&quot;</span></span><br><span class="line">	:breakpoints=<span class="string">&quot;&#123;</span></span><br><span class="line"><span class="string">		768: &#123;slidesPerView: 3&#125;</span></span><br><span class="line"><span class="string">	&#125;&quot;</span></span><br><span class="line">	:spaceBetween=<span class="string">&quot;30&quot;</span></span><br><span class="line">	:pagination=<span class="string">&quot;&#123;clickable: true,&#125;&quot;</span></span><br><span class="line">	:navigation=<span class="string">&quot;true&quot;</span></span><br><span class="line">	:loop=<span class="string">&quot;true&quot;</span>​</span><br><span class="line">	:autoplay=<span class="string">&quot;&#123;</span></span><br><span class="line"><span class="string">				delay: 2500,</span></span><br><span class="line"><span class="string">				disableOnInteraction: false</span></span><br><span class="line"><span class="string">				&#125;&quot;</span></span><br><span class="line">	:modules=<span class="string">&quot;modules&quot;</span></span><br><span class="line">&gt; </span><br><span class="line">	</span><br><span class="line">		<span class="comment">// 在 swiper-slide 裡面放入要呈現的圖片和標題，每個 swiper-slide 都是獨立的區塊</span></span><br><span class="line">		<span class="language-xml"><span class="tag">&lt;<span class="name">swiper-slide</span> <span class="attr">v-for</span>=<span class="string">&quot;item in data&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;item&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">img</span> <span class="attr">:src</span>=<span class="string">&quot;item.img&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;item.title&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">h3</span>&gt;</span>&#123;&#123;item.title&#125;&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;/<span class="name">swiper-slide</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">Swiper</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p><img src="https://hackmd.io/_uploads/ByRtX2Wgxg.png" alt="VueSwiper_02"></p>
+<p><strong>屬性說明：</strong></p>
+<ul>
+<li>slidesPerView：每次輪播更換則數。</li>
+<li>breakpoints：RWD 響應式斷點，但是請注意只有文件中提到的屬性才能用 RWD，其他操作只能用 CSS 或 JS 實現。在這裡的設定是 slidesPerView 在 768px 以上顯示 3 則，以下顯示 1 則。</li>
+<li>spaceBetween：每則輪播間距，如果想做文字跑馬燈，也可以設定成 auto，讓他自動計算。</li>
+<li>pagination：在此設定為可以使用點選操作的，pagination 還有外觀選項。</li>
+<li>navigation：上下一則導航，如果要使用則設為 true，文章後面會再介紹如何客製化樣式。</li>
+<li>loop：播放至最後一筆時，能維持同一方向從第一筆繼續播放。如果不設定，則整個 swiper 會先逆向回到第一筆，才開始輪播。</li>
+<li>autoplay：自動輪播，在此設定 2500 毫秒輪播，滑鼠互動時，輪播不會暫停計秒。<br>詳細可以參考官方文件，內容有每個屬性的預設值和調整方法。</li>
+</ul>
+<h3 id="3-在父元件使用"><a href="#3-在父元件使用" class="headerlink" title="3. 在父元件使用"></a>3. 在父元件使用</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">	<span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span> // swiper 必須設定顯示區域尺寸</span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">SwiperComponent</span>&gt;</span><span class="tag">&lt;/<span class="name">SwiperComponent</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="comment">// 引入 swiper 元件​</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">import</span> <span class="title class_">SwiperComponent</span> <span class="keyword">from</span> <span class="string">&#x27;@/components/SwiperComponent.vue&#x27;</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">	<span class="attr">components</span>: &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">		<span class="title class_">SwiperComponent</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">	&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>完成到這裡就可以使用啦！很方便又快速~</p>
+<h2 id="三、元件複用"><a href="#三、元件複用" class="headerlink" title="三、元件複用"></a>三、元件複用</h2><h3 id="1-元件複用的好處"><a href="#1-元件複用的好處" class="headerlink" title="1. 元件複用的好處"></a>1. 元件複用的好處</h3><p>減少重複程式碼<br>調整只需要更動元件，避免修改四散的程式碼，較好維護</p>
+<h3 id="2-實作方法"><a href="#2-實作方法" class="headerlink" title="2. 實作方法"></a>2. 實作方法</h3><p>Vue 元件使用的資料可以由<strong>內部生成</strong>與<strong>外部傳入</strong>，我們要同時運用這兩個技巧。</p>
+<ol>
+<li>先在 SwiperComponent.vue 中建立我們要顯示資料的欄位，以本文目標範例圖來說，首先是每個 swiper 區塊的標題。我們先從父元件輸入外部資料試試看，於元件引用處上建立外部屬性 adCategoryTitle，並寫入要呈現的字串標題。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 父元件​</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">	<span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">SwiperComponent</span> <span class="attr">adCategoryTitle</span>=<span class="string">&quot;猜你喜歡吃甜甜&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">SwiperComponent</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">SwiperComponent</span> <span class="attr">adCategoryTitle</span>=<span class="string">&quot;邀請你來嚐口感&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">SwiperComponent</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">SwiperComponent</span> <span class="attr">adCategoryTitle</span>=<span class="string">&quot;美味氣氛隨你加&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">SwiperComponent</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>回到 swiper 元件，將剛才設定的外部屬性名稱填入，就完成了。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SwiperComponent.vue​</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;&#123; adCategoryTitle &#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span> // 使用資料</span></span><br><span class="line"><span class="language-xml">  &lt;Swiper...<span class="tag">&lt;/<span class="name">Swiper</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  ... 略​</span><br><span class="line">	<span class="attr">props</span>: [<span class="string">&#x27;adCategoryTitle&#x27;</span>]  <span class="comment">// 由 props 接收外部傳入資料</span></span><br><span class="line">&#125;​</span><br><span class="line">&lt;/sctipt&gt;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>但通常複用元件不僅只有標題變化，輪播內容也要不同，所以我們可以再回頭修改上面的程式碼。<br>以下 swiper 元件運作邏輯是：</li>
+</ol>
+<ul>
+<li>將父元件傳入的文字屬性化，從中文標題改成分類。</li>
+<li>swiper 元件建立屬性對應的標題 adTitle，結合上一個步驟，就可以利用傳入資料對應獲取的中文標題了，這可以避免中文字要修改時父子元件都要更動的問題。</li>
+<li>父元件渲染時，每碰到 swiper 元件都會啟動 <code>mounted</code> 獲取產品資料 <code>getProducts()</code>。</li>
+<li><code>getProducts()</code> 也是根據外部傳入資料，獲取對應要顯示的產品內容。</li>
+</ul>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">// 父元件</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">	<span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">SwiperComponent</span> <span class="attr">adCategoryTitle</span>=<span class="string">&quot;sweet&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">SwiperComponent</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">SwiperComponent</span> <span class="attr">adCategoryTitle</span>=<span class="string">&quot;taste&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">SwiperComponent</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">SwiperComponent</span> <span class="attr">adCategoryTitle</span>=<span class="string">&quot;spices&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">SwiperComponent</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">// SwiperComponent.vue​</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">props</span>: [<span class="string">&#x27;adCategoryTitle&#x27;</span>],</span><br><span class="line">  <span class="title function_">data</span> () &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">allProducts</span>: [],</span><br><span class="line">      <span class="attr">adTitle</span>: &#123;</span><br><span class="line">        <span class="attr">sweet</span>: <span class="string">&#x27;猜你喜歡吃甜甜&#x27;</span>,</span><br><span class="line">        <span class="attr">taste</span>: <span class="string">&#x27;邀請你來嚐口感&#x27;</span>,</span><br><span class="line">        <span class="attr">spices</span>: <span class="string">&#x27;美味氣氛隨你加&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">modules</span>: [<span class="title class_">Autoplay</span>, <span class="title class_">Pagination</span>, <span class="title class_">Navigation</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">methods</span>: &#123;</span><br><span class="line">    <span class="comment">// 獲取產品</span></span><br><span class="line">    <span class="title function_">getProducts</span> () &#123;</span><br><span class="line"> 			<span class="keyword">if</span> (adCategoryTitle === <span class="string">&quot;sweet&quot;</span>)&#123; <span class="comment">// 根據傳入 props 獲取對應資料​</span></span><br><span class="line"> 				...</span><br><span class="line"> 				<span class="variable language_">this</span>.<span class="property">allProducts</span> = response</span><br><span class="line"> 			&#125;<span class="keyword">else</span> <span class="keyword">if</span> (adCategoryTitle === <span class="string">&quot;taste&quot;</span>)&#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">mounted</span> () &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">getProducts</span>()</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">components</span>: &#123;</span><br><span class="line">    <span class="title class_">Swiper</span>,</span><br><span class="line">    <span class="title class_">SwiperSlide</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、客製化-swiper-樣式"><a href="#四、客製化-swiper-樣式" class="headerlink" title="四、客製化 swiper 樣式"></a>四、客製化 swiper 樣式</h2><h3 id="1-客製化-navigation"><a href="#1-客製化-navigation" class="headerlink" title="1. 客製化 navigation"></a>1. 客製化 navigation</h3><p>swiper 本身動作就綁定在原生 CSS 樣式上，不需要額外寫 <code>id</code> 或 <code>class</code> 使用 <code>DOM</code> 綁定。以下 <code>.swiper-button-next</code> 和 <code>.swiper-button-prev</code> 都是原生設定，藉由這兩項樣式調整 CSS，就可以客製化外觀了。<br>如果 navigation 要 RWD 響應式顯示，也是藉由 CSS 設定。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SwiperComponent.vue​</span></span><br><span class="line"><span class="comment">// 原本我們在 &lt;Swiper&gt; 標籤中的設定</span></span><br><span class="line">&lt;<span class="title class_">Swiper</span> :navigation=<span class="string">&quot;true&quot;</span>&gt;</span><br><span class="line">		<span class="language-xml"><span class="tag">&lt;<span class="name">SwiperSlide</span>&gt;</span>...<span class="tag">&lt;/<span class="name">SwiperSlide</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Swiper</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改成以下設定​</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Swiper</span> <span class="attr">:navigation</span>=<span class="string">&quot;&#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">	  nextEl: &#x27;.swiper-button-next&#x27;, // 下一則</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">	  prevEl: &#x27;.swiper-button-prev&#x27; // 上一則</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">	&#125;&quot;</span>&gt;</span>	</span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">SwiperSlide</span>&gt;</span>...<span class="tag">&lt;/<span class="name">SwiperSlide</span>&gt;</span>​</span></span><br><span class="line"><span class="language-xml">	// 因為要客製化 button，所以額外新增 DOM 在 <span class="tag">&lt;<span class="name">Swiper</span>&gt;</span> 內，並套用原生 class 樣式</span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;swiper-button-next&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;swiper-button-prev&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span>	</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">Swiper</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SwiperComponent.vue​</span></span><br><span class="line"><span class="comment">// 請依你的專案微調 css 數值​</span></span><br><span class="line">&lt;style lang=<span class="string">&quot;scss&quot;</span> scoped&gt;</span><br><span class="line">	<span class="comment">// 替換成客製化 icon 的方法​</span></span><br><span class="line">	.<span class="property">swiper</span>-button-next&#123;</span><br><span class="line">		 <span class="comment">// 插入你想使用的 icon 即設定尺寸</span></span><br><span class="line">		<span class="attr">background</span>: <span class="title function_">url</span>(<span class="string">&quot;...&quot;</span>) no-repeat center; </span><br><span class="line">		background-<span class="attr">size</span>: 40px 40px;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 隱藏原生的藍色箭頭</span></span><br><span class="line">    text-<span class="attr">indent</span>: <span class="number">101</span>%;</span><br><span class="line">    white-<span class="attr">space</span>: nowrap;</span><br><span class="line">    <span class="attr">overflow</span>: hidden;</span><br><span class="line">    <span class="attr">width</span>: 40px;</span><br><span class="line">    <span class="attr">height</span>: 40px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 僅替換原生箭頭顏色的方法</span></span><br><span class="line">	.<span class="property">swiper</span>-button-prev &#123;</span><br><span class="line"> 		<span class="comment">// 使用 color 就可以更換箭頭顏色​</span></span><br><span class="line">		<span class="attr">color</span>: $red;​</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="2-navigation-在-Swiper-元件範圍外顯示的方法"><a href="#2-navigation-在-Swiper-元件範圍外顯示的方法" class="headerlink" title="2. navigation 在 Swiper 元件範圍外顯示的方法"></a>2. navigation 在 Swiper 元件範圍外顯示的方法</h3><p>swiper 預設的 navigation 是在 <code>.swiper</code> 範圍內的。如果要讓 navigation（藍框）像下圖超出在 <code>.swiper</code>（紅框）範圍外，我們要先來釐清它的 CSS。<br><img src="https://hackmd.io/_uploads/HJgRKQ3Wxle.png" alt="VueSwiper_03"></p>
+<p>HTML 中 <code>&lt;Swiper&gt;</code> 生成的範圍就是途中右側使用 <code>.swiper</code> 樣式的區域範圍，它本身有 <code>position-relative</code> 和 <code>overflow-hidden</code> 的設定，所以我們可以發現：</p>
+<ul>
+<li>查看 <code>.swiper-button-next</code> 或 <code>.swiper-button-prev</code>，發現原生帶有 p<code>osition-absolute</code> 樣式，所以可以透過 <code>top/right...</code> 等方法定位。</li>
+<li>如果直接移動 navigation 位置，會發現超出 <code>.swiper</code> 的部分會被隱藏，所以我們要針對區域尺寸做更改。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SwiperComponent.vue​</span></span><br><span class="line">&lt;<span class="title class_">Swiper</span> <span class="keyword">class</span>=<span class="string">&quot;product-swiper&quot;</span>&gt;  <span class="comment">// 新增一個樣式</span></span><br><span class="line">	...​</span><br><span class="line">&lt;/<span class="title class_">Swiper</span>&gt;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> &lt;style lang=<span class="string">&quot;scss&quot;</span> scoped&gt;</span><br><span class="line"><span class="comment">// 由於我的預設是 768px 以內不顯示 navigation 所以做了 RWD 設定</span></span><br><span class="line"><span class="comment">// 如果 navigation 一直存在，只要參考 @media&#123;&#125; 內的程式碼就好​</span></span><br><span class="line">:<span class="title function_">deep</span>(<span class="params">.product-swiper</span>) &#123;</span><br><span class="line">  <span class="attr">margin</span>: auto;</span><br><span class="line">  <span class="attr">padding</span>: <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  @<span class="title function_">media</span> (min-<span class="attr">width</span>: 768px) &#123;</span><br><span class="line">		<span class="comment">// 因為我的 navigation 尺寸是 40x40，我希望能凸出顯示一半，所以設定 20px</span></span><br><span class="line">    <span class="attr">margin</span>: <span class="number">0</span> -20px !important; </span><br><span class="line">    <span class="attr">padding</span>: <span class="number">0</span> 20px !important;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我們可以從下圖理解 padding 和 margin 合作關係。</p>
+<ul>
+<li>紅框是我們要限縮內容顯示的範圍</li>
+<li>padding 20px，將 <code>.swiper</code> <code>overflow-hidden</code> 的範圍左右撐開</li>
+<li>margin -20px，讓輪播內容範圍內縮，如果不做這個設定，輪播範圍會跟黃框一樣<br><img src="https://hackmd.io/_uploads/rk0K73Zgll.png" alt="VueSwiper_04"></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;style lang=<span class="string">&quot;scss&quot;</span> scoped&gt;</span><br><span class="line"><span class="comment">// 因為原生 swiper navigation​ 就帶有 position-absolute 樣式，所以直接定義位置</span></span><br><span class="line">.<span class="property">swiper</span>-button-next &#123;</span><br><span class="line">    <span class="attr">top</span>: <span class="number">50</span>%;</span><br><span class="line">    <span class="attr">right</span>: 0px;</span><br><span class="line">		...</span><br><span class="line">&#125;</span><br><span class="line">.<span class="property">swiper</span>-button-prev &#123;</span><br><span class="line">    <span class="attr">top</span>: <span class="number">50</span>%;</span><br><span class="line">    <span class="attr">left</span>: 0px;</span><br><span class="line">		...</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-客製化-pagination"><a href="#3-客製化-pagination" class="headerlink" title="3. 客製化 pagination"></a>3. 客製化 pagination</h3><p>pagination 也可以使用原生的 <code>.swiper-pagination</code> 修改。<br>例如以下做了只有 768px 以下才顯示、更改 pagination 顏色。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* swiper 顯示區域尺寸 */</span></span><br><span class="line"><span class="comment">// 其實 pagination 的位置是仰賴 swiper-wrapper​ 區塊</span></span><br><span class="line"><span class="comment">// pagintaion 預設自動貼合 swiper-wrapper 區塊底端，所以要藉由 margin-bottom 把區塊撐大</span></span><br><span class="line">.<span class="property">swiper</span>-wrapper &#123;</span><br><span class="line">    margin-<span class="attr">bottom</span>: 36px;</span><br><span class="line"></span><br><span class="line">    @<span class="title function_">media</span> (min-<span class="attr">width</span>: 768px) &#123;</span><br><span class="line">      margin-<span class="attr">bottom</span>: 0rem;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*Swiper 頁碼導覽*/</span></span><br><span class="line">.<span class="property">swiper</span>-pagination &#123;</span><br><span class="line">    <span class="attr">display</span>: inline-block;</span><br><span class="line"></span><br><span class="line">    @<span class="title function_">media</span> (min-<span class="attr">width</span>: 768px) &#123;</span><br><span class="line">      <span class="attr">display</span>: none;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &amp;-bullet &#123;</span><br><span class="line">      <span class="attr">background</span>: #<span class="number">787878</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &amp;-bullet-active &#123;</span><br><span class="line">      <span class="attr">background</span>: #<span class="number">333333</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、結尾"><a href="#五、結尾" class="headerlink" title="五、結尾"></a>五、結尾</h2><p>當初在 swiper vue 上卡了很久，感謝 Billy 助教提供指點，告訴我要換成 swiper 8 才能避免錯誤。<br>感謝好同學聿凌提問 Swiper 10 能否運行，經過測試也沒問題！<br>附上這位超認真同學的專題 <a target="_blank" rel="noopener" href="https://github.com/GinaTung/2024-southerntravelwebsite-fin">Repo</a>、<a target="_blank" rel="noopener" href="https://ginatung.github.io/2024-southerntravelwebsite-fin/#/">Pages</a>，這是一個南部旅遊方案電商，整個平台和 JSON Server 資料庫都是她獨力開發完成的。從 JS 直播班到 Vue 直播班，看她與專題教練的討論紀錄，很開心她克服重重困難，完成了這份專題。</p>
+<p>本文原發表於 <a target="_blank" rel="noopener" href="https://vocus.cc/article/66124270fd89780001f54193">Vocus</a>，此篇為個人 blog 備份。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Front-End/" rel="tag"># 前端</a>
+              <a href="/tags/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/" rel="tag"># 套件筆記</a>
+              <a href="/tags/%E8%BC%AA%E6%92%AD/" rel="tag"># 輪播</a>
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Development-notes/APP/20250425/2300425267/" rel="prev" title="Expo 推播通知（Android） - Firebase 與 Azure 整合（2）">
+      <i class="fa fa-chevron-left"></i> Expo 推播通知（Android） - Firebase 與 Azure 整合（2）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/3352310755/" rel="next" title="【套件筆記 - JS】頁碼 Pagination.js">
+      【套件筆記 - JS】頁碼 Pagination.js <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A8%99%E5%8A%9F%E8%83%BD"><span class="nav-number">1.</span> <span class="nav-text">目標功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%98%E7%B6%B2%E8%B3%87%E6%BA%90-%E5%AE%89%E8%A3%9D"><span class="nav-number">2.</span> <span class="nav-text">一、官網資源&#x2F;安裝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BB%BA%E7%AB%8B%E5%85%83%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">二、建立元件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BC%95%E5%85%A5%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">1. 引入方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%92%B0%E5%AF%AB-HTML"><span class="nav-number">3.2.</span> <span class="nav-text">2. 撰寫 HTML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9C%A8%E7%88%B6%E5%85%83%E4%BB%B6%E4%BD%BF%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">3. 在父元件使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%85%83%E4%BB%B6%E8%A4%87%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">三、元件複用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%85%83%E4%BB%B6%E8%A4%87%E7%94%A8%E7%9A%84%E5%A5%BD%E8%99%95"><span class="nav-number">4.1.</span> <span class="nav-text">1. 元件複用的好處</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AF%A6%E4%BD%9C%E6%96%B9%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">2. 實作方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%A2%E8%A3%BD%E5%8C%96-swiper-%E6%A8%A3%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">四、客製化 swiper 樣式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%A2%E8%A3%BD%E5%8C%96-navigation"><span class="nav-number">5.1.</span> <span class="nav-text">1. 客製化 navigation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-navigation-%E5%9C%A8-Swiper-%E5%85%83%E4%BB%B6%E7%AF%84%E5%9C%8D%E5%A4%96%E9%A1%AF%E7%A4%BA%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">2. navigation 在 Swiper 元件範圍外顯示的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%A2%E8%A3%BD%E5%8C%96-pagination"><span class="nav-number">5.3.</span> <span class="nav-text">3. 客製化 pagination</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%B5%90%E5%B0%BE"><span class="nav-number">6.</span> <span class="nav-text">五、結尾</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ann Chou</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ann Chou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
