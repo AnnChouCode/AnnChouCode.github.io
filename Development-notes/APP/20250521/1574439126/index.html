@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://learn.microsoft.com/zh-tw/azure/notification-hubs/media/notification-hubs-overview/notification-hub-diagram.png">
 <meta property="article:published_time" content="2025-05-21T14:37:13.000Z">
-<meta property="article:modified_time" content="2025-05-21T14:37:42.566Z">
+<meta property="article:modified_time" content="2025-05-21T14:42:52.297Z">
 <meta property="article:author" content="Ann Chou">
 <meta property="article:tag" content="前端">
 <meta property="article:tag" content="APP">
@@ -194,7 +194,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2025-05-21 22:37:13 / 修改時間：22:37:42" itemprop="dateCreated datePublished" datetime="2025-05-21T22:37:13+08:00">2025-05-21</time>
+              <time title="創建時間：2025-05-21 22:37:13 / 修改時間：22:42:52" itemprop="dateCreated datePublished" datetime="2025-05-21T22:37:13+08:00">2025-05-21</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,7 +253,7 @@
 <li>重安裝 App。</li>
 <li>更換 Google 帳號。</li>
 <li>使用者清除 App 資料。</li>
-<li>裝置不活躍超過 9 個月：Google 2024&#x2F;06 起自動刪除閒置 9 個月的 <code>FCMtoken</code>，所以不活躍裝置在 9 個月後又開始活動也會更新 <code>FCMtoken</code>。</li>
+<li>裝置不活躍超過 9 個月：<a target="_blank" rel="noopener" href="https://batch.com/blog/posts/android-push-updates-fcm-api">Google 2024&#x2F;06 起自動刪除閒置 9 個月的 <code>FCMtoken</code></a>，所以不活躍裝置在 9 個月後又開始活動也會更新 <code>FCMtoken</code>。</li>
 </ul>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> messaging <span class="keyword">from</span> <span class="string">&#x27;@react-native-firebase/messaging&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">HomeScreen</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">setupPush</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> token = <span class="keyword">await</span> <span class="title function_">messaging</span>().<span class="title function_">getToken</span>();</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`FCM token: <span class="subst">$&#123;token&#125;</span>`</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`初始化推播錯誤 <span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(err)&#125;</span>`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">setupPush</span>();</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (...略)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
