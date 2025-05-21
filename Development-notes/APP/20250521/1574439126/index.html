@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"annchoucode.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="這篇文章將完成把 Android 裝置註冊到 Azure 通知中樞的程式碼。 前置準備在這篇文章中，你需要事先準備  完成 Expo 推播通知（Android） - Firebase 與 Azure 整合（2） 中的所有設定和安裝。 Ajax 套件，ex：這篇範例是使用 Axios。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Expo 推播通知（Android） - Firebase 與 Azure 整合（3）">
+<meta property="og:url" content="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250521/1574439126/index.html">
+<meta property="og:site_name" content="Ann Chou Coding">
+<meta property="og:description" content="這篇文章將完成把 Android 裝置註冊到 Azure 通知中樞的程式碼。 前置準備在這篇文章中，你需要事先準備  完成 Expo 推播通知（Android） - Firebase 與 Azure 整合（2） 中的所有設定和安裝。 Ajax 套件，ex：這篇範例是使用 Axios。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://learn.microsoft.com/zh-tw/azure/notification-hubs/media/notification-hubs-overview/notification-hub-diagram.png">
+<meta property="article:published_time" content="2025-05-21T14:37:13.000Z">
+<meta property="article:modified_time" content="2025-05-21T14:37:42.566Z">
+<meta property="article:author" content="Ann Chou">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="APP">
+<meta property="article:tag" content="ReactNative">
+<meta property="article:tag" content="Expo">
+<meta property="article:tag" content="Firebase">
+<meta property="article:tag" content="Azure">
+<meta property="article:tag" content="FirebaseCloudMessaging">
+<meta property="article:tag" content="AzureNotificationHub">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://learn.microsoft.com/zh-tw/azure/notification-hubs/media/notification-hubs-overview/notification-hub-diagram.png">
+
+<link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250521/1574439126/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Expo 推播通知（Android） - Firebase 與 Azure 整合（3） | Ann Chou Coding</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ann Chou Coding</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤<span class="badge">20</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔<span class="badge">11</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250521/1574439126/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ann Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ann Chou Coding">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Expo 推播通知（Android） - Firebase 與 Azure 整合（3）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-05-21 22:37:13 / 修改時間：22:37:42" itemprop="dateCreated datePublished" datetime="2025-05-21T22:37:13+08:00">2025-05-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/" itemprop="url" rel="index"><span itemprop="name">開發筆記</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/APP/" itemprop="url" rel="index"><span itemprop="name">APP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>這篇文章將完成把 Android 裝置註冊到 Azure 通知中樞的程式碼。</p>
+<h2 id="前置準備"><a href="#前置準備" class="headerlink" title="前置準備"></a>前置準備</h2><p>在這篇文章中，你需要事先準備</p>
+<ul>
+<li>完成 <a href="https://annchoucode.github.io/Development-notes/APP/20250425/2300425267/">Expo 推播通知（Android） - Firebase 與 Azure 整合（2）</a> 中的所有設定和安裝。</li>
+<li>Ajax 套件，ex：這篇範例是使用 <a target="_blank" rel="noopener" href="https://github.com/axios/axios">Axios</a>。</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="前導知識"><a href="#前導知識" class="headerlink" title="前導知識"></a>前導知識</h2><h3 id="什麼是-APNS-與-FCM？"><a href="#什麼是-APNS-與-FCM？" class="headerlink" title="什麼是 APNS 與 FCM？"></a>什麼是 APNS 與 FCM？</h3><ul>
+<li><strong>APNs（Apple Push Notification Service）</strong>：Apple 提供的推播服務，用來將通知送到 Apple 裝置，需先申請 Apple 開發者帳號才能取得。</li>
+<li><strong>FCM（Firebase Cloud Messaging）</strong>：Google 提供的推播服務，使用 Firebase SDK 取得。FCM 提供兩種 API：<ul>
+<li>Legacy API：舊版 API，用 server key 傳送請求，較簡單但功能有限，已經在 2024&#x2F;06 被淘汰。</li>
+<li>FCM v1（HTTP v1 API）：新版 API，使用 OAuth 2.0 認證，支援多平台設定與更高安全性，Google 推薦使用。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Azure-推播通知運作方式"><a href="#Azure-推播通知運作方式" class="headerlink" title="Azure 推播通知運作方式"></a>Azure 推播通知運作方式</h3><p><img src="https://learn.microsoft.com/zh-tw/azure/notification-hubs/media/notification-hubs-overview/notification-hub-diagram.png" alt="Azure 推播通知運作方式"><br>上圖來自 Azure 文件，我們可以從中了解 Azure 推播的運作流程。</p>
+<ol>
+<li>裝置向 APNS（Apple）或 FCM（Google）索取推播識別碼，這將作為接收 Azure 的通道。</li>
+<li>Azure 使用識別碼，註冊到 Azure 上。</li>
+<li>後端把通知送到通知中樞。</li>
+<li>通知中樞轉給平台 APNS（Apple）或 FCM（Google），由平台推送到裝置。</li>
+</ol>
+<h2 id="使用-REST-API-註冊-Azure"><a href="#使用-REST-API-註冊-Azure" class="headerlink" title="使用 REST API 註冊 Azure"></a>使用 REST API 註冊 Azure</h2><p>其實整段程式碼很簡單，但可以使用 REST API 執行的教學藏在 C# 範例裡，我也是先找到很多提供整合的老舊套件，才發現原來 Azure 本身就有提供註冊方法。</p>
+<h3 id="1-取得推播識別碼"><a href="#1-取得推播識別碼" class="headerlink" title="1. 取得推播識別碼"></a>1. 取得推播識別碼</h3><p>安裝 react-native-firebase&#x2F;messaging，根據 <a target="_blank" rel="noopener" href="https://rnfirebase.io/reference/messaging#getToken">文件中 messaging 提供的 getToken 方法</a> 取得 <code>FCMtoken</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i @react-native-firebase/messaging</span><br></pre></td></tr></table></figure>
+
+<p>通常裝置每次取得的 <code>FCMtoken</code> 是相同的，但在以下情境時會改變：</p>
+<ul>
+<li>重安裝 App。</li>
+<li>更換 Google 帳號。</li>
+<li>使用者清除 App 資料。</li>
+<li>裝置不活躍超過 9 個月：Google 2024&#x2F;06 起自動刪除閒置 9 個月的 <code>FCMtoken</code>，所以不活躍裝置在 9 個月後又開始活動也會更新 <code>FCMtoken</code>。</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> messaging <span class="keyword">from</span> <span class="string">&#x27;@react-native-firebase/messaging&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">HomeScreen</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">setupPush</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> token = <span class="keyword">await</span> <span class="title function_">messaging</span>().<span class="title function_">getToken</span>();</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`FCM token: <span class="subst">$&#123;token&#125;</span>`</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`初始化推播錯誤 <span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(err)&#125;</span>`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">setupPush</span>();</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (...略)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-準備註冊需要的參數"><a href="#2-準備註冊需要的參數" class="headerlink" title="2. 準備註冊需要的參數"></a>2. 準備註冊需要的參數</h3><p>我們會使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/rest/api/notificationhubs/create-registration">建立 Azure 註冊 create-registration</a> 這支 API。還記得我們在上一篇文章中有設定 Azure 通知中樞 FCM（v1）金鑰嗎？這支 API 會將剛才產生的 FCM token 註冊到其中。成功註冊的裝置會得到 <code>registerId</code> 等資訊，這未來能用於修改和刪除，建議存到後端。</p>
+<p>這是我們註冊需要準備的資料：</p>
+<ul>
+<li><code>namespace</code>：Notification Hub 所屬的命名空間（Namespace）</li>
+<li><code>NotificationHub</code>：實際 Notification Hub 名稱，是你註冊裝置與推播的實際目標</li>
+<li><code>SAStoken</code>：Shared Access Signature</li>
+</ul>
+<p><code>namespace</code> 和 <code>NotificationHub</code> 已經在上一篇文章建立通知中樞時設定好了，本文裡兩個 value 都用 <code>AnnNotify</code>。</p>
+<h4 id="SAS-token"><a href="#SAS-token" class="headerlink" title="SAS token"></a>SAS token</h4><p><code>SAStoken</code> 將由以下參數組成，程式碼在 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/rest/api/notificationhubs/common-concepts#create-sas-security-token">官方文件</a> 有附。</p>
+<ul>
+<li><code>targetUri</code>：<code>https://$&#123;HUB_NAMESPACE&#125;.servicebus.windows.net/$&#123;HUB_NAME&#125;</code>。</li>
+<li><code>sharedKey</code>：’Access Policies 中 DefaultListenSharedAccessSignature 的金鑰值’。</li>
+<li><code>ruleId</code>：’DefaultListenSharedAccessSignature’。因為<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/azure/notification-hubs/notification-hubs-push-notification-security">共用存取簽章安全性</a>考量，建議 <code>FullSharedAccess</code> 只在後端使用，前端不要用呦。</li>
+<li><code>expiresInMins</code>：過期時間（產生後幾分鐘失效），<code>SAStoken</code>失效不影響已經成功的 Azure 註冊。其實建議設定短時間，並且由後端產生較安全，但前端還是可以自己先產出測試。</li>
+</ul>
+<p>我們可以新增一個 hook 專門用來放註冊程式碼，直接從 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/rest/api/notificationhubs/common-concepts#create-sas-security-token">官方文件</a> 中複製貼上吧！</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hooks/useAzureRegistration.tsx</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">CryptoJS</span> <span class="keyword">from</span> <span class="string">&#x27;crypto-js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">HUB_NAME</span> = <span class="string">&#x27;通知中樞名稱&#x27;</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">HUB_NAMESPACE</span> = <span class="string">&#x27;通知中樞命名空間&#x27;</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">SHARED_ACCESS_KEY</span> =</span><br><span class="line">  <span class="string">&#x27;Access Policies 中 DefaultListenSharedAccessSignature 的金鑰值&#x27;</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">SHARED_ACCESS_KEY_NAME</span> = <span class="string">&#x27;DefaultListenSharedAccessSignature&#x27;</span> <span class="comment">// 切記前端不要使用 FullSharedAccess</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> registerDeviceToAzure = <span class="title function_">async</span> (<span class="attr">fcmToken</span>: <span class="built_in">string</span>): <span class="title class_">Promise</span>&lt;<span class="built_in">void</span>&gt; =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> baseUri = <span class="string">`https://<span class="subst">$&#123;HUB_NAMESPACE&#125;</span>.servicebus.windows.net/<span class="subst">$&#123;HUB_NAME&#125;</span>`</span></span><br><span class="line">  <span class="keyword">const</span> apiVersion = <span class="string">&#x27;2015-01&#x27;</span></span><br><span class="line">  <span class="keyword">const</span> targetUri = <span class="string">`<span class="subst">$&#123;baseUri&#125;</span>`</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 生產 SAS token，設定 30 分鐘失效</span></span><br><span class="line">  <span class="keyword">const</span> sasToken = <span class="title function_">getSelfSignedToken</span>(</span><br><span class="line">    targetUri,</span><br><span class="line">    <span class="variable constant_">SHARED_ACCESS_KEY</span>,</span><br><span class="line">    <span class="variable constant_">SHARED_ACCESS_KEY_NAME</span>,</span><br><span class="line">    <span class="number">30</span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SAS token 工具</span></span><br><span class="line"><span class="keyword">const</span> getSelfSignedToken = <span class="keyword">function</span> (<span class="params"></span></span><br><span class="line"><span class="params">  <span class="attr">targetUri</span>: <span class="built_in">string</span>,</span></span><br><span class="line"><span class="params">  <span class="attr">sharedKey</span>: <span class="built_in">string</span>,</span></span><br><span class="line"><span class="params">  <span class="attr">ruleId</span>: <span class="built_in">string</span>,</span></span><br><span class="line"><span class="params">  <span class="attr">expiresInMins</span>: <span class="built_in">number</span></span></span><br><span class="line"><span class="params"></span>) &#123;</span><br><span class="line">  targetUri = <span class="built_in">encodeURIComponent</span>(targetUri.<span class="title function_">toLowerCase</span>()).<span class="title function_">toLowerCase</span>()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Set expiration in seconds</span></span><br><span class="line">  <span class="keyword">var</span> expireOnDate = <span class="keyword">new</span> <span class="title class_">Date</span>()</span><br><span class="line">  expireOnDate.<span class="title function_">setMinutes</span>(expireOnDate.<span class="title function_">getMinutes</span>() + expiresInMins)</span><br><span class="line">  <span class="keyword">var</span> expires =</span><br><span class="line">    <span class="title class_">Date</span>.<span class="title function_">UTC</span>(</span><br><span class="line">      expireOnDate.<span class="title function_">getUTCFullYear</span>(),</span><br><span class="line">      expireOnDate.<span class="title function_">getUTCMonth</span>(),</span><br><span class="line">      expireOnDate.<span class="title function_">getUTCDate</span>(),</span><br><span class="line">      expireOnDate.<span class="title function_">getUTCHours</span>(),</span><br><span class="line">      expireOnDate.<span class="title function_">getUTCMinutes</span>(),</span><br><span class="line">      expireOnDate.<span class="title function_">getUTCSeconds</span>()</span><br><span class="line">    ) / <span class="number">1000</span></span><br><span class="line">  <span class="keyword">var</span> tosign = targetUri + <span class="string">&#x27;\n&#x27;</span> + expires</span><br><span class="line"></span><br><span class="line">  <span class="comment">// using CryptoJS</span></span><br><span class="line">  <span class="keyword">var</span> signature = <span class="title class_">CryptoJS</span>.<span class="title class_">HmacSHA256</span>(tosign, sharedKey)</span><br><span class="line">  <span class="keyword">var</span> base64signature = signature.<span class="title function_">toString</span>(<span class="title class_">CryptoJS</span>.<span class="property">enc</span>.<span class="property">Base64</span>)</span><br><span class="line">  <span class="keyword">var</span> base64UriEncoded = <span class="built_in">encodeURIComponent</span>(base64signature)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// construct autorization string</span></span><br><span class="line">  <span class="keyword">var</span> token =</span><br><span class="line">    <span class="string">&#x27;SharedAccessSignature sr=&#x27;</span> +</span><br><span class="line">    targetUri +</span><br><span class="line">    <span class="string">&#x27;&amp;sig=&#x27;</span> +</span><br><span class="line">    base64UriEncoded +</span><br><span class="line">    <span class="string">&#x27;&amp;se=&#x27;</span> +</span><br><span class="line">    expires +</span><br><span class="line">    <span class="string">&#x27;&amp;skn=&#x27;</span> +</span><br><span class="line">    ruleId</span><br><span class="line">  <span class="comment">// console.log(&quot;signature:&quot; + token);</span></span><br><span class="line">  <span class="keyword">return</span> token</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> registerDeviceToAzure</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-註冊-Azure-通知中樞"><a href="#3-註冊-Azure-通知中樞" class="headerlink" title="3. 註冊 Azure 通知中樞"></a>3. 註冊 Azure 通知中樞</h3><p>回到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/rest/api/notificationhubs/create-registration">建立 Azure 註冊 create-registration</a> 這支 API，不同系統裝置有不同註冊範本。這篇文章以 Android 為主，使用 Firebase，所以我的註冊範本 <code>xmlBody</code> 使用 <code>FcmV1TemplateRegistration</code> 的範例，其他系統可以再替換。<br>另外可以選擇使用以下標籤</p>
+<ul>
+<li><code>Tags</code>：推播時可針對標籤推播，如果要設定只推給 Android 用戶，可使用 <code>&lt;Tags&gt;Android&lt;/Tags&gt;</code>。想推給某特定用戶，也可以自訂每個裝置有不同 Id，使用 Id 註冊。</li>
+<li><code>ExpirationTime</code>：註冊有效時間。Azure 通知中樞的付費方案與可註冊數量有關，尤其是在開發者測試期間會反覆重新安裝（本文第 1 個步驟有提到 <code>FCMtoken</code> 更新機制），如果不設定有效時間，會累積大量新註冊。雖然有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-tw/rest/api/notificationhubs/delete-registration">刪除註冊 API</a>，但一次只能刪一個註冊。</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hooks/useAzureRegistration.tsx</span></span><br><span class="line"><span class="keyword">const</span> registerDeviceToAzure = <span class="title function_">async</span> (<span class="attr">fcmToken</span>: <span class="built_in">string</span>): <span class="title class_">Promise</span>&lt;<span class="built_in">void</span>&gt; =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> baseUri = <span class="string">`https://<span class="subst">$&#123;HUB_NAMESPACE&#125;</span>.servicebus.windows.net/<span class="subst">$&#123;HUB_NAME&#125;</span>`</span>;</span><br><span class="line">  <span class="keyword">const</span> apiVersion = <span class="string">&#x27;2015-01&#x27;</span>;</span><br><span class="line">  <span class="keyword">const</span> targetUri = <span class="string">`<span class="subst">$&#123;baseUri&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 生產 SAS token，設定 30 分鐘失效</span></span><br><span class="line">  <span class="keyword">const</span> sasToken = <span class="title function_">getSelfSignedToken</span>(targetUri, <span class="variable constant_">SHARED_ACCESS_KEY</span>, <span class="variable constant_">SHARED_ACCESS_KEY_NAME</span>, <span class="number">30</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Azure 註冊的過期時間設定為 30 天</span></span><br><span class="line">  <span class="keyword">const</span> expirationDate = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">  expirationDate.<span class="title function_">setDate</span>(expirationDate.<span class="title function_">getDate</span>() + <span class="number">30</span>);</span><br><span class="line">  <span class="keyword">const</span> isoString = expirationDate.<span class="title function_">toISOString</span>().<span class="title function_">replace</span>(<span class="regexp">/\.\d&#123;3&#125;Z$/</span>, <span class="string">&#x27;+08:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// FcmV1TemplateRegistration  註冊範本</span></span><br><span class="line">  <span class="keyword">const</span> xmlBody = <span class="string">`</span></span><br><span class="line"><span class="string">&lt;entry xmlns=&quot;http://www.w3.org/2005/Atom&quot;&gt;</span></span><br><span class="line"><span class="string">  &lt;content type=&quot;application/xml&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;FcmV1RegistrationDescription xmlns:i=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://schemas.microsoft.com/netservices/2010/10/servicebus/connect&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;Tags&gt;...&lt;/Tags&gt;</span></span><br><span class="line"><span class="string">      &lt;FcmV1RegistrationId&gt;<span class="subst">$&#123;fcmToken&#125;</span>&lt;/FcmV1RegistrationId&gt;</span></span><br><span class="line"><span class="string">      &lt;ExpirationTime&gt;<span class="subst">$&#123;isoString&#125;</span>&lt;/ExpirationTime&gt;</span></span><br><span class="line"><span class="string">    &lt;/FcmV1RegistrationDescription&gt;</span></span><br><span class="line"><span class="string">  &lt;/content&gt;</span></span><br><span class="line"><span class="string">&lt;/entry&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> axios.<span class="title function_">post</span>(<span class="string">`<span class="subst">$&#123;baseUri&#125;</span>/registrations?api-version=<span class="subst">$&#123;apiVersion&#125;</span>`</span>, xmlBody, &#123;</span><br><span class="line">      <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;Authorization&#x27;</span>: sasToken,</span><br><span class="line">        <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/atom+xml&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析 response 返回註冊頁面顯示</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;📡 Azure 註冊成功:&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">status</span>: response.<span class="property">status</span>,</span><br><span class="line">      <span class="attr">registrationId</span>: response.<span class="property">data</span>?.<span class="title function_">match</span>(<span class="regexp">/&lt;title[^&gt;]*&gt;(.*?)&lt;\/title&gt;/</span>)?.[<span class="number">1</span>] ?? <span class="string">&#x27;不明&#x27;</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (<span class="attr">error</span>: <span class="built_in">any</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;❌ Azure 註冊失敗:&#x27;</span>, error);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`註冊失敗：<span class="subst">$&#123;error.message&#125;</span>`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SAS token 工具</span></span><br><span class="line"><span class="keyword">const</span> getSelfSignedToken = <span class="keyword">function</span> (<span class="params"><span class="attr">targetUri</span>: <span class="built_in">string</span>, <span class="attr">sharedKey</span>: <span class="built_in">string</span>, <span class="attr">ruleId</span>: <span class="built_in">string</span>,</span></span><br><span class="line"><span class="params">  <span class="attr">expiresInMins</span>: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">  ...略</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> registerDeviceToAzure;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-從頁面執行註冊-Hook"><a href="#4-從頁面執行註冊-Hook" class="headerlink" title="4. 從頁面執行註冊 Hook"></a>4. 從頁面執行註冊 Hook</h3><p>我們只剩一步就完成了！<br>回到要執行註冊動作的頁面，在程式碼下方把 Hook 方法加入。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HomeScreen.tsx</span></span><br><span class="line"><span class="keyword">const</span> token = <span class="keyword">await</span> <span class="title function_">messaging</span>().<span class="title function_">getToken</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`FCM token: <span class="subst">$&#123;token&#125;</span>`</span>)</span><br><span class="line"><span class="keyword">await</span> <span class="title function_">registerDeviceToAzure</span>(token)</span><br></pre></td></tr></table></figure>
+
+<p>完工！🎉🎉</p>
+<p>接下來幾篇會介紹</p>
+<ul>
+<li>要求裝置開啟通知授權</li>
+<li>打包與 Android Studio 偵錯</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Front-End/" rel="tag"># 前端</a>
+              <a href="/tags/APP/" rel="tag"># APP</a>
+              <a href="/tags/ReactNative/" rel="tag"># ReactNative</a>
+              <a href="/tags/Expo/" rel="tag"># Expo</a>
+              <a href="/tags/Firebase/" rel="tag"># Firebase</a>
+              <a href="/tags/Azure/" rel="tag"># Azure</a>
+              <a href="/tags/FirebaseCloudMessaging/" rel="tag"># FirebaseCloudMessaging</a>
+              <a href="/tags/AzureNotificationHub/" rel="tag"># AzureNotificationHub</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%A5%97%E4%BB%B6%E7%AD%86%E8%A8%98/20250502/3352310755/" rel="prev" title="【套件筆記 - JS】頁碼 Pagination.js">
+      <i class="fa fa-chevron-left"></i> 【套件筆記 - JS】頁碼 Pagination.js
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E6%BA%96%E5%82%99"><span class="nav-number">1.</span> <span class="nav-text">前置準備</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E5%B0%8E%E7%9F%A5%E8%AD%98"><span class="nav-number">2.</span> <span class="nav-text">前導知識</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E9%BA%BC%E6%98%AF-APNS-%E8%88%87-FCM%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什麼是 APNS 與 FCM？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Azure-%E6%8E%A8%E6%92%AD%E9%80%9A%E7%9F%A5%E9%81%8B%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">Azure 推播通知運作方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-REST-API-%E8%A8%BB%E5%86%8A-Azure"><span class="nav-number">3.</span> <span class="nav-text">使用 REST API 註冊 Azure</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%8F%96%E5%BE%97%E6%8E%A8%E6%92%AD%E8%AD%98%E5%88%A5%E7%A2%BC"><span class="nav-number">3.1.</span> <span class="nav-text">1. 取得推播識別碼</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%BA%96%E5%82%99%E8%A8%BB%E5%86%8A%E9%9C%80%E8%A6%81%E7%9A%84%E5%8F%83%E6%95%B8"><span class="nav-number">3.2.</span> <span class="nav-text">2. 準備註冊需要的參數</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SAS-token"><span class="nav-number">3.2.1.</span> <span class="nav-text">SAS token</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%A8%BB%E5%86%8A-Azure-%E9%80%9A%E7%9F%A5%E4%B8%AD%E6%A8%9E"><span class="nav-number">3.3.</span> <span class="nav-text">3. 註冊 Azure 通知中樞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%BE%9E%E9%A0%81%E9%9D%A2%E5%9F%B7%E8%A1%8C%E8%A8%BB%E5%86%8A-Hook"><span class="nav-number">3.4.</span> <span class="nav-text">4. 從頁面執行註冊 Hook</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ann Chou</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ann Chou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

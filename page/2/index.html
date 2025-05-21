@@ -22,27 +22,27 @@
 
   <meta property="og:type" content="website">
 <meta property="og:title" content="Ann Chou Coding">
-<meta property="og:url" content="https://annchoucode.github.io/AnnChouCode.github.io/categories/Development-notes/APP/index.html">
+<meta property="og:url" content="https://annchoucode.github.io/AnnChouCode.github.io/page/2/index.html">
 <meta property="og:site_name" content="Ann Chou Coding">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:author" content="Ann Chou">
 <meta property="article:tag" content="前端, 網頁開發, JavaScript, 前端套件">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/categories/Development-notes/APP/">
+<link rel="canonical" href="https://annchoucode.github.io/AnnChouCode.github.io/page/2/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
+    isHome : true,
     isPost : false,
     lang   : 'zh-TW'
   };
 </script>
 
-  <title>分類: APP | Ann Chou Coding</title>
+  <title>Ann Chou Coding</title>
   
 
 
@@ -150,192 +150,103 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://annchoucode.github.io/AnnChouCode.github.io/Development-notes/APP/20250104/2019271185/">
 
-  
-  
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">APP
-          <small>分類</small>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ann Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ann Chou Coding">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/Development-notes/APP/20250104/2019271185/" class="post-title-link" itemprop="url">Ionic 7 + Angular：除錯 R3InjectorError(Platform:core)</a>
         </h2>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2025-01-04 16:37:52" itemprop="dateCreated datePublished" datetime="2025-01-04T16:37:52+08:00">2025-01-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2025-04-19 13:01:01" itemprop="dateModified" datetime="2025-04-19T13:01:01+08:00">2025-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/" itemprop="url" rel="index"><span itemprop="name">開發筆記</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development-notes/APP/" itemprop="url" rel="index"><span itemprop="name">APP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2025</span>
+          <p>​最近在研究做 APP 的方法，以 web 前端開發者的身分來說，第一優先會先選擇能用 HTML 和 JS 的框架出發。以下紀錄我使用 Ionic Angular 的使用紀錄：</p>
+<h2 id="▍-錯誤描述"><a href="#▍-錯誤描述" class="headerlink" title="▍ 錯誤描述"></a>▍ 錯誤描述</h2><p>在以下環境下，可能發生 <code>R3InjectorError(Platform: core)</code> 報錯</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@ionic/cli: 7.2.0</span><br><span class="line">@angular/cli: 19.0.6</span><br></pre></td></tr></table></figure>
+<p>完整錯誤訊息如果是經由 Android Studio <code>CatLog</code> 查看，大概會是這樣：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NullInjectorError: R3InjectorError(Platform: core)[t -&gt; Ir]</span><br><span class="line">NullInjectorError: No provider for Ir!</span><br></pre></td></tr></table></figure>
+<p><img src="https://hackmd.io/_uploads/ry0m1p_Pyx.jpg" alt="Android Studio CatLog 截圖"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/Development-notes/APP/20250104/2019271185/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2025-05-21T22:37:13+08:00"
-              content="2025-05-21">
-          05-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Development-notes/APP/20250521/1574439126/" itemprop="url">
-            <span itemprop="name">Expo 推播通知（Android） - Firebase 與 Azure 整合（3）</span>
-          </a>
-      </div>
-
-    </header>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
   </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2025-04-25T21:05:02+08:00"
-              content="2025-04-25">
-          04-25
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Development-notes/APP/20250425/2300425267/" itemprop="url">
-            <span itemprop="name">Expo 推播通知（Android） - Firebase 與 Azure 整合（2）</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2025-04-19T18:16:27+08:00"
-              content="2025-04-19">
-          04-19
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Development-notes/APP/20250419/1653277596/" itemprop="url">
-            <span itemprop="name">Expo 推播通知（Android） - Firebase 與 Azure 整合（1）</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2025-04-19T11:11:54+08:00"
-              content="2025-04-19">
-          04-19
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Development-notes/APP/20250419/93694046/" itemprop="url">
-            <span itemprop="name">React Native / Expo 介紹</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2025-04-19T11:11:01+08:00"
-              content="2025-04-19">
-          04-19
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Development-notes/APP/20250419/4178738459/" itemprop="url">
-            <span itemprop="name">App 種類概述</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2025-01-18T14:43:43+08:00"
-              content="2025-01-18">
-          01-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Development-notes/APP/20250118/1557608653/" itemprop="url">
-            <span itemprop="name">Ionic 7 + Angular：PWA camera 相機功能比較</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2025-01-18T13:24:42+08:00"
-              content="2025-01-18">
-          01-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Development-notes/APP/20250118/3376891371/" itemprop="url">
-            <span itemprop="name">Ionic 7 + Angular：除錯 NOT SUPPORTED: use "$id" for schema ID</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2025-01-04T16:37:52+08:00"
-              content="2025-01-04">
-          01-04
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/Development-notes/APP/20250104/2019271185/" itemprop="url">
-            <span itemprop="name">Ionic 7 + Angular：除錯 R3InjectorError(Platform:core)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-    </div>
-  </div>
   
   
   
 
+
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一頁"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
 
